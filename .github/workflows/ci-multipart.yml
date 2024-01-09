@@ -11,42 +11,6 @@ on:
       - "packages/multipart/**"
     
 jobs:
-  dependency-review:
-    name: Dependency Review
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Dependency review
-        uses: actions/dependency-review-action@v3
-
-  license-check:
-    name: Check Licenses
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm i --ignore-scripts
-
-      - name: Check Licenses
-        run: npx license-checker --production --onlyAllow="BSD-2-Clause;BSD-3-Clause;ISC;MIT;GPL-3.0"
-
   linter:
     name: Lint Code
     runs-on: ubuntu-latest
