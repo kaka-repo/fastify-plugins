@@ -1,4 +1,4 @@
-import { spawnSync } from 'node:child_process'
+import { execSync } from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
@@ -38,7 +38,7 @@ async function clean () {
 async function build (mode = 'all') {
   if (mode === 'all' || mode === 'cjs') {
     console.log('build cjs - start')
-    spawnSync('tsc', ['-p', 'tsconfig.cjs.json'], { stdio: 'pipe' })
+    execSync('tsc -p tsconfig.cjs.json', { stdio: 'pipe' })
     // for (const file of await fs.readdir(path.resolve('lib'), { recursive: true })) {
     //   if (isBuildAsset(file)) {
     //     await fs.rename(path.resolve('lib', file), path.resolve('lib', file).replace('.js', '.cjs').replace('.d.ts', '.d.cts'))
@@ -48,13 +48,13 @@ async function build (mode = 'all') {
   }
   if (mode === 'all' || mode === 'mjs') {
     console.log('build mjs - start')
-    spawnSync('tsc', ['-p', 'tsconfig.mjs.json'], { stdio: 'pipe' })
+    execSync('tsc -p tsconfig.mjs.json', { stdio: 'pipe' })
     // for (const file of await fs.readdir(path.resolve('lib'), { recursive: true })) {
     //   if (isBuildAsset(file)) {
     //     await fs.rename(path.resolve('lib', file), path.resolve('lib', file).replace('.js', '.mjs').replace('.d.ts', '.d.mts'))
     //   }
     // }
-    spawnSync('tsc-alias', ['-p', 'tsconfig.mjs.json'], { stdio: 'pipe' })
+    execSync('tsc-alias -p tsconfig.mjs.json', { stdio: 'pipe' })
     console.log('build mjs - end')
   }
 }
