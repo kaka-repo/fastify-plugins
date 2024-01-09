@@ -62,10 +62,10 @@
     "lib": "lib"
   },
   "scripts": {
-    "clean": "node scripts/build.mjs --clean",
+    "clean": "node ../../scripts/build.mjs --clean",
     "lint": "eslint --ext .ts lib test",
     "lint:fix": "npm run lint -- --fix",
-    "build": "node scripts/build.mjs --build=\"all\"",
+    "build": "node ../../scripts/build.mjs --build=\"all\"",
     "build:cjs": "node scripts/build.mjs --build='cjs'",
     "build:mjs": "node scripts/build.mjs --build='mjs'",
     "unit": "node --require ts-node/register ./test/run.ts",
