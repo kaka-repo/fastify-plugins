@@ -82,6 +82,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Lint code
         run: pnpm --filter "./packages/multipart" run lint
 
@@ -123,6 +126,9 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.node-version }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.node-version }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Run tests
         run: pnpm --filter "./packages/multipart" run test
