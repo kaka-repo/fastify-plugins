@@ -3,9 +3,11 @@ name: Continuous Integration - Multipart
 on:
   push:
     paths:
+      - ".github/workflows/ci-multipart.yml"
       - "packages/multipart/**"
   pull_request:
     paths:
+      - ".github/workflows/ci-multipart.yml"
       - "packages/multipart/**"
     
 jobs:
