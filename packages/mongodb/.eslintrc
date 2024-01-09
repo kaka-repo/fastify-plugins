@@ -1,0 +1,24 @@
+{
+  "extends": "standard-with-typescript",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    // conflict between standard and standard-typescript
+    "no-void": ["error", { "allowAsStatement": true }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts"],
+      "rules": {
+        "@typescript-eslint/no-floating-promises": "off"
+      }
+    },
+    {
+      "files": ["scripts/*.mjs"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    }
+  ]
+}

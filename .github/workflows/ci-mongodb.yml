@@ -1,0 +1,123 @@
+name: Continuous Integration - MongoDB
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ci-mongodb.yml"
+      - "packages/mongodb/**"
+  pull_request:
+    paths:
+      - ".github/workflows/ci-mongodb.yml"
+      - "packages/mongodb/**"
+    
+jobs:
+  linter:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint code
+        run: pnpm --filter "./packages/mongodb" run lint
+
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        node-version: [18, 20]
+        os: [ubuntu-latest]
+        mongodb: [5, 6]
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.10.0
+        with:
+          mongodb-replica-set: rs0
+          mongodb-version: ${{ matrix.mongodb }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-${{ matrix.node-version }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node-version }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests
+        run: pnpm --filter "./packages/mongodb" run test
+
+  automerge:
+    name: Automerge Dependabot PRs
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    needs: test
+    permissions:
+      pull-requests: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3
+        with:
+          exclude: ${{ inputs.auto-merge-exclude }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          target: major

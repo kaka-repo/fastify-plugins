@@ -1,0 +1,16 @@
+{
+  "name": "@kakang/fastify-plugins",
+  "version": "0.0.0",
+  "private": true,
+  "author": "KaKa <kaka@kakang.dev>",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaka-repo/fastify-plugins.git"
+  },
+  "scripts": {
+    "unit": "pnpm -r --workspace-concurrency=1 unit",
+    "test": "pnpm -r --workspace-concurrency=1 test",
+    "lint": "pnpm -r --workspace-concurrency=1 lint"
+  }
+}
