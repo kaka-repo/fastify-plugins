@@ -129,3 +129,4 @@ jest*
 
 lib/**/*.ts
 !lib/**/*.d.ts
+scripts/
