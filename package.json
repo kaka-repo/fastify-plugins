@@ -1,0 +1,10 @@
+{
+  "name": "@kakang/fastify",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "unit": "pnpm -r --workspace-concurrency=1 unit",
+    "test": "pnpm -r --workspace-concurrency=1 test",
+    "lint": "pnpm -r --workspace-concurrency=1 lint"
+  }
+}
