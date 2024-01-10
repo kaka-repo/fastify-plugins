@@ -3,6 +3,14 @@ import { resolve } from 'node:path'
 import { compose } from 'node:stream'
 import { run } from 'node:test'
 import { spec as Spec } from 'node:test/reporters'
+import { parseArgs } from 'node:util'
+
+const { values } = parseArgs({
+  args: process.args,
+  options: {
+    timeout: { type: 'string' },
+  }
+})
 
 function findFiles () {
   const files = readdirSync(resolve('test'), { recursive: true })
@@ -11,7 +19,7 @@ function findFiles () {
 
 run({
   concurrency: true,
-  timeout: 30_000,
+  timeout: Number(values.timeout ?? 30_000),
   setup: (test) => {
     const reportor = new Spec()
     compose(test.reporter, reportor).pipe(process.stdout)
