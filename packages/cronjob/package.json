@@ -73,11 +73,16 @@
     "tsc-alias": "^1.8.8",
     "typescript": "^5.3.3"
   },
-  "peerDependencies": {
-    "mongodb": "^6.3.0"
-  },
   "dependencies": {
     "cron-parser": "^4.9.0",
     "fastify-plugin": "^4.5.1"
+  },
+  "peerDependencies": {
+    "mongodb": "^6.3.0"
+  },
+  "peerDependenciesMeta": {
+    "mongodb": {
+      "optional": true
+    }
   }
 }
