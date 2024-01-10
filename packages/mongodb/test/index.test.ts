@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { fastifyMongodb } from '../lib/index'
+import { fastifyMongoDB } from '../lib/index'
 
 const MONGODB_URI = 'mongodb://127.0.0.1:27017/?replicaSet=rs0'
 
@@ -9,7 +9,7 @@ test('option', async function (t) {
   await t.test('missing url', async function (t) {
     const fastify = Fastify()
 
-    fastify.register(fastifyMongodb)
+    fastify.register(fastifyMongoDB)
 
     assert.rejects(async () => {
       await fastify.ready()
@@ -20,7 +20,7 @@ test('option', async function (t) {
     const fastify = Fastify()
 
     // @ts-expect-error - we check for missing option
-    fastify.register(fastifyMongodb, { url: 'mongodb://127.0.0.1:27017' })
+    fastify.register(fastifyMongoDB, { url: 'mongodb://127.0.0.1:27017' })
 
     assert.rejects(async () => {
       await fastify.ready()
@@ -35,7 +35,7 @@ test('register', async function (t) {
     await fastify.close()
   })
 
-  fastify.register(fastifyMongodb, {
+  fastify.register(fastifyMongoDB, {
     url: MONGODB_URI,
     database: 'foobar'
   })
@@ -55,7 +55,7 @@ test('register', async function (t) {
     await fastify.close()
   })
 
-  fastify.register(fastifyMongodb, {
+  fastify.register(fastifyMongoDB, {
     url: MONGODB_URI,
     database: 'foobar'
   })
@@ -75,7 +75,7 @@ test('functional', async function (t) {
     await fastify.close()
   })
 
-  fastify.register(fastifyMongodb, {
+  fastify.register(fastifyMongoDB, {
     url: MONGODB_URI,
     database: 'foobar'
   })
@@ -93,7 +93,7 @@ test('functional', async function (t) {
     await fastify.close()
   })
 
-  fastify.register(fastifyMongodb, {
+  fastify.register(fastifyMongoDB, {
     url: MONGODB_URI,
     database: 'foobar'
   })

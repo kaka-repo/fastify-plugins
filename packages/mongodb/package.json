@@ -10,8 +10,8 @@
   "types": "lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/mjs/index.js"
+      "import": "./lib/mjs/index.js",
+      "require": "./lib/index.js"
     }
   },
   "scripts": {

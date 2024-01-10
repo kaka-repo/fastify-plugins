@@ -19,9 +19,9 @@ yarn add @kakang/fastify-mongodb mongodb
 ## Usage
 
 ```ts
-import FastifyMongoDB from '@kakang/fastify-mongodb'
+import fastifyMongoDB from '@kakang/fastify-mongodb'
 
-fastify.register(FastifyMongoDB, {
+fastify.register(fastifyMongoDB, {
   url: 'mongodb://127.0.0.1:27017',
   database: 'foobar',
   options: {} // MongoClient options

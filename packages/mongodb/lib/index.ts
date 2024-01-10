@@ -12,13 +12,13 @@ declare module 'fastify' {
   }
 }
 
-export interface FastifyMongoDBOption {
+export interface fastifyMongoDBOption {
   url: string
   database: string
   options?: MongoClientOptions
 }
 
-const plugin: FastifyPluginAsync<FastifyMongoDBOption> = async function (fastify, option) {
+const plugin: FastifyPluginAsync<fastifyMongoDBOption> = async function (fastify, option) {
   if (typeof option.url !== 'string') throw Error(`option.url is expected to be "string", but recieved "${typeof option.url}"`)
   if (typeof option.database !== 'string') throw Error(`option.database is expected to be "string", but recieved "${typeof option.database}"`)
 
@@ -61,7 +61,7 @@ const plugin: FastifyPluginAsync<FastifyMongoDBOption> = async function (fastify
   })
 }
 
-export const fastifyMongodb = FastifyPlugin(plugin, {
+export const fastifyMongoDB = FastifyPlugin(plugin, {
   fastify: '4.x',
   name: '@kakang/fastify-mongodb',
   decorators: {
