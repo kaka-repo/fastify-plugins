@@ -1,6 +1,6 @@
 {
   "name": "@kakang/fastify-cronjob",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Fastify plugin for cronjob",
   "keywords": [
     "fastify",
