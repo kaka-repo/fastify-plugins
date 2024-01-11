@@ -48,7 +48,8 @@ export class MongoDBAdapter extends Adapter {
   }
 
   async createTask (task: Task): Promise<Task> {
-    await this.collection.insertOne(task)
+    // we use upsert here since multiple instance may register the same task
+    await this.collection.updateOne({ tid: task.tid }, { $set: task }, { upsert: true })
     return task
   }
 
