@@ -19,6 +19,15 @@ yarn add @kakang/fastify-config
 ```ts
 import { build } from '@kakang/fastify-config'
 
+// you need to explicit type it yourself
+declare modules 'fastify' {
+  interface FastifyInstance {
+    config: {
+      FOO: string
+    }
+  }
+}
+
 const { env, plugin } = build({
   schema: {
     type: 'object',
