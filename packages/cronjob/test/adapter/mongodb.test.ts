@@ -61,7 +61,8 @@ test('MongoDBAdapter', async function (t) {
     await fastify.cronjob.addTask({
       name: 'every 5 second',
       cron: '*/5 * * * * *',
-      executor () {
+      executor (context) {
+        assert.ok(context.server)
         times++
       }
     })
@@ -101,7 +102,8 @@ test('MongoDBAdapter', async function (t) {
       cron: '* * * * * *',
       // it would be the nearest second
       once: true,
-      executor () {
+      executor (context) {
+        assert.ok(context.server)
         times++
       }
     })
@@ -139,7 +141,8 @@ test('MongoDBAdapter', async function (t) {
     await fastify.cronjob.addTask({
       name: 'every 5 second',
       cron: '*/5 * * * * *',
-      executor () {
+      executor (context) {
+        assert.ok(context.server)
         times++
       }
     })

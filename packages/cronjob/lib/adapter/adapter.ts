@@ -9,11 +9,12 @@ export interface Task {
   isDeleted: boolean
 }
 
-export interface CreateTask {
+export interface CreateTask<Context = unknown> {
   name: string
   cron: string
   once?: boolean
-  executor: () => void | Promise<void>
+  context?: Context
+  executor: (context: Context) => void | Promise<void>
 }
 
 export interface AdapterOptions {
@@ -28,7 +29,7 @@ export class Adapter {
   name: string
   nextTimer: null | NodeJS.Timeout
   isDestroyed: boolean
-  tasks: Record<string, () => void | Promise<void>>
+  tasks: Record<string, { context: unknown, executor: (context: unknown) => void | Promise<void> }>
 
   minTickMS: number
   maxTickMS: number
@@ -81,7 +82,10 @@ export class Adapter {
   }
 
   async addTask (task: CreateTask): Promise<void> {
-    this.tasks[task.name] = task.executor
+    this.tasks[task.name] = {
+      context: task.context,
+      executor: task.executor
+    }
     const nextExecuteAt = cronParser.parseExpression(task.cron).next()
     await this.createTask({
       tid: task.name,
@@ -111,15 +115,20 @@ export class Adapter {
   async runTask (task: Task): Promise<boolean> {
     if (this.isDestroyed || task.isDeleted) return false
 
-    const executor = this.tasks[task.tid]
+    const done = async (executeAt: number): Promise<void> => {
+      await this.updateTask(task, executeAt, task.once)
+    }
+
+    const { context, executor } = this.tasks[task.tid]
     if (typeof executor !== 'function') {
+      await done(Date.now() + this.maxExecutionMS)
       return false
     }
 
     const nextExecuteAt = cronParser.parseExpression(task.cron).next()
 
-    await executor()
-    await this.updateTask(task, Number(nextExecuteAt.toDate()), task.once)
+    await executor(context)
+    await done(Number(nextExecuteAt.toDate()))
 
     return true
   }
@@ -155,7 +164,9 @@ export class Adapter {
       await this.updateTasks(tasks, nextExecuteAt, false)
 
       for (const task of tasks) {
-        await this._runTask(task)
+        // we should not wait for the task here
+        // otherwise the whole scheduler stuck
+        void this._runTask(task)
       }
     } finally {
       await this._releaseLock()

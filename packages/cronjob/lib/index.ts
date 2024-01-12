@@ -1,15 +1,17 @@
-import { type FastifyPluginAsync } from 'fastify'
+import { type FastifyInstance, type FastifyPluginAsync } from 'fastify'
 import FastifyPlugin from 'fastify-plugin'
 import { type Adapter, type AdapterOptions, type CreateTask, type Task } from './adapter/adapter'
 import { FST_CJ_INVALID_OPTION } from './error'
 import { kAdapter } from './symbols'
 
+interface CronJob {
+  addTask: <Context = FastifyInstance>(task: CreateTask<Context>) => Promise<void>
+  removeTask: (name: string) => Promise<void>
+}
+
 declare module 'fastify' {
   interface FastifyInstance {
-    cronjob: {
-      addTask: (task: CreateTask) => Promise<void>
-      removeTask: (name: string) => Promise<void>
-    }
+    cronjob: CronJob
   }
 }
 
@@ -29,9 +31,10 @@ const plugin: FastifyPluginAsync<FastifyCronJobOption> = async function (fastify
 
   await adapter.prepare()
 
-  const cronjob = {
-    async addTask (task: CreateTask) {
-      await adapter.addTask(task)
+  const cronjob: CronJob = {
+    async addTask <Context = FastifyInstance>(task: CreateTask<Context>) {
+      task.context ??= fastify as any
+      await adapter.addTask(task as CreateTask<unknown>)
     },
     async removeTask (name: string) {
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
