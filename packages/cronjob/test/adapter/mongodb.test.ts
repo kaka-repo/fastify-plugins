@@ -98,8 +98,8 @@ test('MongoDBAdapter', async function (t) {
   }
 
   t.after(async function () {
-    await db.dropDatabase()
     await fastify.close()
+    await db.dropDatabase()
     await client.close(true)
   })
 
