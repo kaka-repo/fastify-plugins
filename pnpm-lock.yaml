@@ -69,9 +69,6 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1
     devDependencies:
-      '@kakang/fastify-mongodb':
-        specifier: workspace:^
-        version: link:../mongodb
       '@types/node':
         specifier: ^20.11.0
         version: 20.11.0

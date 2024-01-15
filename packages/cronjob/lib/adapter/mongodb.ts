@@ -1,10 +1,16 @@
-import { type Collection, type Db } from 'mongodb'
-import { Adapter, type AdapterOptions, type Task } from './adapter'
+import { type Collection, type CreateIndexesOptions, type Db, type IndexSpecification } from 'mongodb'
+import { type CreateTask, type Task } from '../cronjob'
+import { Adapter, type AdapterOptions } from './adapter'
 
 export interface MongoDBAdapterOptions extends AdapterOptions {
   db: Db
 }
 
+async function ensureIndex (collection: Collection, indexSpec: IndexSpecification, options: CreateIndexesOptions): Promise<void> {
+  try {
+    await collection.createIndex(indexSpec, options)
+  } catch {}
+}
 export class MongoDBAdapter extends Adapter {
   db: Db
   collection: Collection
@@ -18,24 +24,12 @@ export class MongoDBAdapter extends Adapter {
   }
 
   async prepare (): Promise<void> {
-    await this.collection.createIndex({ tid: 1 }, { unique: true }).catch(() => {})
-    await this.collection.createIndex({ tid: 1, isDeleted: 1 }, { unique: false }).catch(() => {})
-    await this.collection.createIndex({ executeAt: 1 }, { unique: false }).catch(() => {})
+    await ensureIndex(this.collection, { uid: 1 }, { unique: true, background: false })
+    await ensureIndex(this.collection, { uid: 1, isDeleted: 1 }, { unique: false, background: false })
+    await ensureIndex(this.collection, { executeAt: 1 }, { unique: false, background: false })
 
-    await this.collectionLock.createIndex({ expireAt: 1 }, { unique: false, expireAfterSeconds: 1 }).catch(() => {})
-    await this.collectionLock.createIndex({ application: 1 }, { unique: true }).catch(() => {})
-  }
-
-  async aquireLock (): Promise<boolean> {
-    const expireAt = Date.now() + this.maxExecutionMS
-    const result = await this.collectionLock.findOne({ application: this.application })
-    if (result !== null) return false
-    await this.collectionLock.insertOne({ application: this.application, expireAt })
-    return true
-  }
-
-  async releaseLock (): Promise<void> {
-    await this.collectionLock.deleteOne({ application: this.application })
+    await ensureIndex(this.collectionLock, { expireAt: 1 }, { unique: false, expireAfterSeconds: 1, background: false })
+    await ensureIndex(this.collectionLock, { application: 1 }, { unique: true, background: false })
   }
 
   async fetchTasks (executeAt: number): Promise<Task[]> {
@@ -47,28 +41,71 @@ export class MongoDBAdapter extends Adapter {
     return await cursor.toArray()
   }
 
-  async createTask (task: Task): Promise<Task> {
-    // we use upsert here since multiple instance may register the same task
-    await this.collection.updateOne({ tid: task.tid }, { $set: task }, { upsert: true })
-    return task
-  }
-
-  async updateTask (task: Task, nextExecuteAt: number, isDeleted: boolean): Promise<Task> {
-    const result = await this.collection.findOneAndUpdate({ tid: task.tid }, { $set: { executeAt: nextExecuteAt, isDeleted } })
-    return result as never as Task
-  }
-
-  async updateTasks (tasks: Task[], executeAt: number, isDeleted: boolean): Promise<Task[]> {
-    await this.collection.updateMany({
-      tid: {
-        $in: tasks.map((t) => t.tid)
+  async createTask (task: CreateTask): Promise<void> {
+    const _task = await this.collection.findOne<Task>({ uid: task.uid })
+    const executeAt = Date.now() + task.delay
+    if (_task === null) {
+      await this.collection.insertOne({
+        uid: task.uid,
+        once: task.once ?? false,
+        delay: task.delay,
+        executeAt
+      })
+    } else {
+      let $set: any = null
+      if (_task.delay !== task.delay) {
+        $set = { delay: task.delay }
       }
+      if (_task.executeAt !== executeAt) {
+        $set ??= {}
+        $set.executeAt = executeAt
+      }
+      if ($set !== null) {
+        await this.collection.updateOne({
+          uid: task.uid
+        }, {
+          $set
+        })
+      }
+    }
+  }
+
+  async updateTasks (uids: string[], executeAt: number): Promise<void> {
+    await this.collection.updateMany({
+      uid: {
+        $in: uids
+      }
+    }, {
+      $set: {
+        executeAt
+      }
+    })
+  }
+
+  async updateTask (uid: string, executeAt: number, isDeleted: boolean): Promise<Task | null> {
+    const result = await this.collection.findOneAndUpdate({
+      uid
     }, {
       $set: {
         executeAt,
         isDeleted
       }
     })
-    return tasks
+    return result as Task | null
+  }
+
+  async deleteTask (uid: string): Promise<void> {
+    await this.collection.deleteOne({ uid })
+  }
+
+  async aquireLock (name: string, expireAt: number): Promise<boolean> {
+    const result = await this.collectionLock.findOne({ application: name })
+    if (result !== null) return false
+    await this.collectionLock.insertOne({ application: name, expireAt })
+    return true
+  }
+
+  async releaseLock (name: string): Promise<void> {
+    await this.collectionLock.deleteOne({ application: name })
   }
 }
