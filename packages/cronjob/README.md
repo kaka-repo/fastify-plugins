@@ -32,15 +32,126 @@ fastify.register(fastifyCronjob, {
     db
   }
 })
-
-fastify.cronjob.addTask({
-  name: 'every minutes',
-  cron: '0 * * * * *',
-  once: false
-  executor() {
-    // any task here
-  }
-})
-
-fastify.cronjob.removeTask('every minutes')
 ```
+
+## API
+
+### .setInterval(fn, ms, uid[, context])
+
+Job that runs on defined interval
+
+```ts
+fastify.cronjob.setInterval(async function(context) {
+  // run in async
+}, 1000, 'async')
+
+// if you perfer in sync
+// please return Promise
+fastify.cronjob.setInterval(function (context) {
+  const promise = {}
+  promise.promise = new Promise(function(resolve, reject) {
+    promise.resolve = resolve
+    promise.reject = reject
+  })
+
+  setImmediate(function() {
+    resolve()
+  })
+
+  return promise.promise
+}, 1000, 'promise')
+```
+
+### .setTimeout(fn, ms, uid[, context])
+
+Job that runs on defined timeout
+
+```ts
+fastify.cronjob.setTimeout(async function(context) {
+  // run in async
+}, 1000, 'async')
+
+// if you perfer in sync
+// please return Promise
+fastify.cronjob.setTimeout(function (context) {
+  const promise = {}
+  promise.promise = new Promise(function(resolve, reject) {
+    promise.resolve = resolve
+    promise.reject = reject
+  })
+
+  setImmediate(function() {
+    resolve()
+  })
+
+  return promise.promise
+}, 1000, 'promise')
+```
+
+### .setImmediate(fn, uid[, context])
+
+Job that runs immediately
+
+```ts
+fastify.cronjob.setImmediate(async function(context) {
+  // run in async
+}, 'async')
+
+// if you perfer in sync
+// please return Promise
+fastify.cronjob.setImmediate(function (context) {
+  const promise = {}
+  promise.promise = new Promise(function(resolve, reject) {
+    promise.resolve = resolve
+    promise.reject = reject
+  })
+
+  setImmediate(function() {
+    resolve()
+  })
+
+  return promise.promise
+}, 'promise')
+```
+
+### .setCronJob(fn, cron, uid[, context])
+
+Job that runs on defined cron string
+
+```ts
+fastify.cronjob.setCronJob(async function(context) {
+  // run in async
+}, '* * * * * *', 'async')
+
+// if you perfer in sync
+// please return Promise
+fastify.cronjob.setCronJob(function (context) {
+  const promise = {}
+  promise.promise = new Promise(function(resolve, reject) {
+    promise.resolve = resolve
+    promise.reject = reject
+  })
+
+  setImmediate(function() {
+    resolve()
+  })
+
+  return promise.promise
+}, '* * * * * *', 'promise')
+```
+
+### .clearInterval(uid)
+
+Remove cronjob by uid.
+
+```ts
+const uid = await fastify.cronjob.setInterval(async function(context) {
+  // run in async
+}, 1000, 'async')
+
+fastify.cronjob.clearInterval(uid)
+```
+
+### .clearTimeout(uid)
+
+Alias of `.clearInterval`
