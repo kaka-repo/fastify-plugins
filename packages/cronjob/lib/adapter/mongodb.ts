@@ -49,15 +49,15 @@ export class MongoDBAdapter extends Adapter {
         uid: task.uid,
         once: task.once ?? false,
         delay: task.delay,
-        executeAt
+        executeAt,
+        isDeleted: false
       })
     } else {
-      let $set: any = null
+      const $set: any = { isDeleted: false }
       if (_task.delay !== task.delay) {
-        $set = { delay: task.delay }
+        $set.delay = task.delay
       }
       if (_task.executeAt !== executeAt) {
-        $set ??= {}
         $set.executeAt = executeAt
       }
       if ($set !== null) {
