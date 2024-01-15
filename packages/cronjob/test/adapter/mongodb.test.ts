@@ -1,3 +1,4 @@
+import { parseExpression } from 'cron-parser'
 import Fastify from 'fastify'
 import { MongoClient } from 'mongodb'
 import assert from 'node:assert/strict'
@@ -17,6 +18,10 @@ function createDeferredPromise (): { promise: Promise<void>, resolve: () => void
     promise.reject = reject
   })
   return promise
+}
+
+function isJob (uid: unknown, expected: string): boolean {
+  return String(uid).includes(expected)
 }
 
 test('MongoDBAdapter', async function (t) {
@@ -49,15 +54,18 @@ test('MongoDBAdapter', async function (t) {
     const now = Date.now()
 
     if (
-      (String(task.uid).includes('interval') || String(task.uid).includes('timeout')) &&
-      timestamps[task.uid].length === 2
+      (
+        isJob(task.uid, 'interval') ||
+        isJob(task.uid, 'timeout') ||
+        isJob(task.uid, 'immediate')
+      ) && timestamps[task.uid].length === 2
     ) {
       const expected = timestamps[task.uid][0]
       const _from = expected - RANDOM_GAP
       const _to = expected + RANDOM_GAP
       const diff = now - expected
 
-      if (String(task.uid).includes('interval')) {
+      if (isJob(task.uid, 'interval')) {
         if (ticks[task.uid] >= 2) {
           fastify.cronjob.clearInterval(task.uid as string)
           assert.equal(ticks[task.uid], 2)
@@ -66,12 +74,29 @@ test('MongoDBAdapter', async function (t) {
           timestamps[task.uid][0] = now + task.delay
           assert.equal(ticks[task.uid], 1)
         }
+      } else if (isJob(task.uid, 'cron')) {
+        if (ticks[task.uid] >= 2) {
+          fastify.cronjob.clearInterval(task.uid as string)
+          assert.equal(ticks[task.uid] >= 2, true)
+          dones[task.uid]()
+        } else {
+          timestamps[task.uid][0] = now + task.delay
+          assert.equal(ticks[task.uid], 1)
+        }
+      } else if (isJob(task.uid, 'loop')) {
+        fastify.cronjob.clearInterval(task.uid as string)
+        assert.equal(ticks[task.uid] >= 1, true)
+        dones[task.uid]()
       } else {
+        fastify.cronjob.clearInterval(task.uid as string)
         assert.equal(ticks[task.uid], 1)
         dones[task.uid]()
       }
-      assert.equal(_from < now && now < _to, true)
-      assert.equal(diff < RANDOM_GAP, true)
+
+      if (!isJob(task.uid, 'loop') && !isJob(task.uid, 'cron')) {
+        assert.equal(_from < now && now < _to, true)
+        assert.equal(diff < RANDOM_GAP, true)
+      }
     }
   })
 
@@ -93,6 +118,25 @@ test('MongoDBAdapter', async function (t) {
     const uid = await fastify.cronjob.setTimeout(async () => {}, interval, '' + interval)
     dones[uid] = promise.resolve
     timestamps[uid] = [Date.now() + interval]
+    ticks[uid] = 0
+    await promise.promise
+  }
+
+  const checkCronJob = async function (cron: string): Promise<void> {
+    const next = parseExpression(cron).next().toDate()
+    const promise = createDeferredPromise()
+    const uid = await fastify.cronjob.setCronJob(async () => {}, cron, cron)
+    dones[uid] = promise.resolve
+    timestamps[uid] = [+next]
+    ticks[uid] = 0
+    await promise.promise
+  }
+
+  const checkLoopTask = async function (name: number): Promise<void> {
+    const promise = createDeferredPromise()
+    const uid = await fastify.cronjob.setLoopTask(async () => {}, '' + name)
+    dones[uid] = promise.resolve
+    timestamps[uid] = [Date.now()]
     ticks[uid] = 0
     await promise.promise
   }
@@ -139,6 +183,24 @@ test('MongoDBAdapter', async function (t) {
       checkTimeout(800),
       checkTimeout(801),
       checkTimeout(802)
+    ]
+    await Promise.allSettled(promises)
+  })
+
+  await t.test('cronjob', async function () {
+    const promises = [
+      checkCronJob('* * * * * *'),
+      checkCronJob('*/2 * * * * *'),
+      checkCronJob('*/3 * * * * *'),
+      checkCronJob('*/4 * * * * *'),
+      checkCronJob('*/5 * * * * *')
+    ]
+    await Promise.allSettled(promises)
+  })
+
+  await t.test('looptask', async function () {
+    const promises = [
+      checkLoopTask(384)
     ]
     await Promise.allSettled(promises)
   })
