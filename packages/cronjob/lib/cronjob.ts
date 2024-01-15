@@ -141,9 +141,30 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
     const ms = nextExecuteAt - Date.now()
 
     return await this.setTimeout(async (context) => {
-      await executor(context)
-      await this.setCronJob(executor, cron, uid, context)
+      setImmediate(() => {
+        // we execute immediately for the next task
+        Promise.race([
+          executor(context),
+          this.setCronJob(executor, cron, uid, context)
+        ]).catch((err) => {
+          this.emit('error', err)
+        })
+      })
     }, ms, `timeout-cron-${uid}`, context)
+  }
+
+  async setLoopTask<Context = RootContext>(
+    executor: TaskExecutor<Context>,
+    uid: string,
+    context?: Context
+  ): Promise<string> {
+    return await this.setImmediate(async (context) => {
+      try {
+        await executor(context)
+      } finally {
+        await this.setLoopTask(executor, uid, context)
+      }
+    }, `timeout-loop-${uid}`, context)
   }
 
   clearInterval (uid: string): void {

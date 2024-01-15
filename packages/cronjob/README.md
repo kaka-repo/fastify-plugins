@@ -140,6 +140,32 @@ fastify.cronjob.setCronJob(function (context) {
 }, '* * * * * *', 'promise')
 ```
 
+### .setLoopTask(fn, uid[, context])
+
+Job that runs immediately one follow the other.
+
+```ts
+fastify.cronjob.setLoopTask(async function(context) {
+  // run in async
+}, 'async')
+
+// if you perfer in sync
+// please return Promise
+fastify.cronjob.setLoopTask(function (context) {
+  const promise = {}
+  promise.promise = new Promise(function(resolve, reject) {
+    promise.resolve = resolve
+    promise.reject = reject
+  })
+
+  setImmediate(function() {
+    resolve()
+  })
+
+  return promise.promise
+}, 'promise')
+```
+
 ### .clearInterval(uid)
 
 Remove cronjob by uid.
