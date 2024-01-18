@@ -1,6 +1,6 @@
 # @kakang/fastify-mongodb
 
-[![Continuous Integration](https://github.com/kaka-repo/fastify-plugins/actions/workflows/ci-multipart.yml/badge.svg)](https://github.com/kaka-repo/fastify-plugins/actions/workflows/ci-mongodb.yml)
+[![Continuous Integration](https://github.com/kaka-ng/fastify-plugins/actions/workflows/ci-multipart.yml/badge.svg)](https://github.com/kaka-ng/fastify-plugins/actions/workflows/ci-mongodb.yml)
 [![NPM version](https://img.shields.io/npm/v/@kakang/fastify-mongodb.svg?style=flat)](https://www.npmjs.com/package/@kakang/fastify-mongodb)
 
 This plugin helps you to register mongodb client to `fastify`,

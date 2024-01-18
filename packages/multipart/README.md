@@ -1,6 +1,6 @@
 # @kakang/fastify-multipart
 
-[![Continuous Integration](https://github.com/kaka-repo/fastify-plugins/actions/workflows/ci-multipart.yml/badge.svg)](https://github.com/kaka-repo/fastify-plugins/actions/workflows/ci-multipart.yml)
+[![Continuous Integration](https://github.com/kaka-ng/fastify-plugins/actions/workflows/ci-multipart.yml/badge.svg)](https://github.com/kaka-ng/fastify-plugins/actions/workflows/ci-multipart.yml)
 [![NPM version](https://img.shields.io/npm/v/@kakang/fastify-multipart.svg?style=flat)](https://www.npmjs.com/package/@kakang/fastify-multipart)
 
 This plugin is used to replace `fastify-formidable` and `fastify-busboy`.

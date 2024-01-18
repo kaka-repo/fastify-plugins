@@ -6,7 +6,7 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kaka-repo/fastify-plugins.git"
+    "url": "https://github.com/kaka-ng/fastify-plugins.git"
   },
   "scripts": {
     "unit": "pnpm -r --workspace-concurrency=1 unit",

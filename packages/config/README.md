@@ -1,6 +1,6 @@
 # @kakang/fastify-config
 
-[![Continuous Integration](https://github.com/kaka-repo/fastify-plugins/actions/workflows/ci-config.yml/badge.svg)](https://github.com/kaka-repo/fastify-plugins/actions/workflows/ci-config.yml)
+[![Continuous Integration](https://github.com/kaka-ng/fastify-plugins/actions/workflows/ci-config.yml/badge.svg)](https://github.com/kaka-ng/fastify-plugins/actions/workflows/ci-config.yml)
 [![NPM version](https://img.shields.io/npm/v/@kakang/fastify-config.svg?style=flat)](https://www.npmjs.com/package/@kakang/fastify-config)
 
 This plugin use `env-schema` to read the .env file and provides

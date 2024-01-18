@@ -33,7 +33,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kaka-repo/fastify-plugins.git"
+    "url": "https://github.com/kaka-ng/fastify-plugins.git"
   },
   "author": "KaKa <kaka@kakang.dev>",
   "license": "MIT",

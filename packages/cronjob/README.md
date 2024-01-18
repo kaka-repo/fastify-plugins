@@ -1,6 +1,6 @@
 # @kakang/fastify-cronjob
 
-[![Continuous Integration](https://github.com/kaka-repo/fastify-plugins/actions/workflows/ci-cronjob.yml/badge.svg)](https://github.com/kaka-repo/fastify-plugins/actions/workflows/ci-cronjob.yml)
+[![Continuous Integration](https://github.com/kaka-ng/fastify-plugins/actions/workflows/ci-cronjob.yml/badge.svg)](https://github.com/kaka-ng/fastify-plugins/actions/workflows/ci-cronjob.yml)
 [![NPM version](https://img.shields.io/npm/v/@kakang/fastify-cronjob.svg?style=flat)](https://www.npmjs.com/package/@kakang/fastify-cronjob)
 
 This plugin is inspired by [JoSK](https://github.com/veliovgroup/josk)
