@@ -47,7 +47,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.1",
     "eslint-plugin-promise": "^6.1.1",
-    "fastify": "^4.26.0",
+    "fastify": "^4.26.1",
     "mongodb": "^6.3.0",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
