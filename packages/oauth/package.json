@@ -1,5 +1,5 @@
 {
-  "name": "@kakang/fastify-oauth",
+  "name": "@kakang/fastify-oauth2",
   "version": "0.0.1",
   "description": "Fastify plugin for OAuth2.0",
   "keywords": [

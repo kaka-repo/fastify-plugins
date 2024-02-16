@@ -50,9 +50,9 @@ const plugin: FastifyPluginAsync<FastifyOAuthOption> = async function (fastify, 
   }
 }
 
-export const FastifyOAuth = FastifyPlugin(plugin, {
+export const FastifyOAuth2 = FastifyPlugin(plugin, {
   fastify: '4.x',
-  name: '@kakang/fastify-oauth',
+  name: '@kakang/fastify-oauth2',
   dependencies: []
 })
-export default FastifyOAuth
+export default FastifyOAuth2
