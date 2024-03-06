@@ -1,15 +1,10 @@
-name: Continuous Integration - Multipart
+name: Automerge
 
 on:
-  push:
-    paths:
-      - ".github/workflows/ci-multipart.yml"
-      - "packages/multipart/**"
   pull_request:
-    paths:
-      - ".github/workflows/ci-multipart.yml"
-      - "packages/multipart/**"
-    
+    branches:
+      - 'dependabot/**'
+
 jobs:
   linter:
     name: Lint Code
@@ -50,7 +45,7 @@ jobs:
         run: pnpm install
 
       - name: Lint code
-        run: pnpm --filter "./packages/multipart" run lint
+        run: pnpm run lint
 
   test:
     name: Test
@@ -95,4 +90,21 @@ jobs:
         run: pnpm install
 
       - name: Run tests
-        run: pnpm --filter "./packages/multipart" run test
+        run: pnpm run test
+
+  automerge:
+    name: Automerge Dependabot PRs
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    needs: test
+    permissions:
+      pull-requests: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3
+        with:
+          exclude: ${{ inputs.auto-merge-exclude }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          target: major
