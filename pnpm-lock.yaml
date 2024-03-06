@@ -228,7 +228,7 @@ importers:
         specifier: ^6.7.0
         version: 6.7.0
 
-  packages/oauth:
+  packages/oauth2:
     dependencies:
       '@types/simple-oauth2':
         specifier: ^5.0.7
