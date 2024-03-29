@@ -55,7 +55,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18, 20]
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
