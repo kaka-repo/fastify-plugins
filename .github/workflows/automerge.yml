@@ -56,6 +56,7 @@ jobs:
       matrix:
         node-version: [18, 20]
         os: [ubuntu-latest]
+        mongodb: [5, 6]
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
