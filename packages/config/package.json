@@ -38,7 +38,7 @@
   "author": "KaKa <kaka@kakang.dev>",
   "license": "MIT",
   "devDependencies": {
-    "@kakang/unit": "^0.0.1",
+    "@kakang/unit": "^0.0.2",
     "@types/node": "^20.12.4",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
