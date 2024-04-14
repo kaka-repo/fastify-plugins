@@ -1,5 +1,5 @@
+import { type test } from '@kakang/unit'
 import Fastify, { type FastifyInstance } from 'fastify'
-import { type test } from 'node:test'
 import FastifyMultipart, { type FastifyMultipartOption } from '../lib'
 import { type Files } from '../lib/adapter/adapter'
 import { kAdapter, kStorage } from '../lib/symbols'

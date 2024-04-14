@@ -1,8 +1,7 @@
-import assert from 'node:assert/strict'
-import test from 'node:test'
+import { test } from '@kakang/unit'
 
 test('always pass', async function (t) {
-  await t.test('pass', function () {
-    assert.equal('pass', 'pass')
+  t.test('pass', function (t) {
+    t.equal('pass', 'pass')
   })
 })

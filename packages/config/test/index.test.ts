@@ -1,8 +1,7 @@
+import { test } from '@kakang/unit'
 import Fastify from 'fastify'
-import assert from 'node:assert/strict'
 import { rm, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { test } from 'node:test'
 import { build } from '../lib'
 
 test('envfile', async function (t) {
@@ -16,7 +15,9 @@ test('envfile', async function (t) {
     await rm(tmpEnv, { force: true })
   })
 
-  await t.test('', async function () {
+  t.test('', async function (t) {
+    const ok: typeof t.ok = t.ok
+
     const { env, plugin } = build({
       schema: {
         type: 'object',
@@ -28,20 +29,20 @@ test('envfile', async function (t) {
       dotenv: { path: tmpEnv }
     })
 
-    assert.ok(env)
-    assert.equal(env.FOO, 'BAR')
-    assert.equal(typeof env.NOT, 'undefined')
-    assert.equal(typeof plugin, 'function')
+    ok(env)
+    t.equal(env.FOO, 'BAR')
+    t.equal(typeof env.NOT, 'undefined')
+    t.equal(typeof plugin, 'function')
 
     const fastify = Fastify()
     fastify.register(plugin)
     await fastify.ready()
 
     // @ts-expect-error we need to types by client
-    assert.ok(fastify.config)
+    ok(fastify.config)
     // @ts-expect-error we need to types by client
-    assert.equal(fastify.config.FOO, 'BAR')
+    t.equal(fastify.config.FOO, 'BAR')
     // @ts-expect-error we need to types by client
-    assert.equal(typeof fastify.config.NOT, 'undefined')
+    t.equal(typeof fastify.config.NOT, 'undefined')
   })
 })

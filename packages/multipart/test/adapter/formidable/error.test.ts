@@ -1,6 +1,5 @@
+import { test } from '@kakang/unit'
 import { Blob } from 'buffer'
-import assert from 'node:assert/strict'
-import { test } from 'node:test'
 import { FormData } from 'undici'
 import { FormidableAdapter } from '../../../lib/adapter/formidable'
 import { Storage } from '../../../lib/storage/storage'
@@ -8,7 +7,7 @@ import { createFastify } from '../../create-fastify'
 import { request } from '../../request'
 
 test('FormidableAdapter - error', async function (t) {
-  await t.test('fields', async function (t) {
+  t.test('fields', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -23,13 +22,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FIELDS_LIMIT')
+    t.equal(json.code, 'FST_MP_FIELDS_LIMIT')
   })
 
-  await t.test('fieldSize', async function (t) {
+  t.test('fieldSize', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -44,13 +43,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FIELD_SIZE_LIMIT')
+    t.equal(json.code, 'FST_MP_FIELD_SIZE_LIMIT')
   })
 
-  await t.test('files', async function (t) {
+  t.test('files', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -65,13 +64,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FILES_LIMIT')
+    t.equal(json.code, 'FST_MP_FILES_LIMIT')
   })
 
-  await t.test('fileSize', async function (t) {
+  t.test('fileSize', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -86,13 +85,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FILE_SIZE_LIMIT')
+    t.equal(json.code, 'FST_MP_FILE_SIZE_LIMIT')
   })
 
-  await t.test('fileSize - with files', async function (t) {
+  t.test('fileSize - with files', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -108,13 +107,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FILE_SIZE_LIMIT')
+    t.equal(json.code, 'FST_MP_FILE_SIZE_LIMIT')
   })
 
-  await t.test('fileSize - with parts', async function (t) {
+  t.test('fileSize - with parts', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -130,13 +129,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FILE_SIZE_LIMIT')
+    t.equal(json.code, 'FST_MP_FILE_SIZE_LIMIT')
   })
 
-  await t.test('fileSize - non-block stream', async function (t) {
+  t.test('fileSize - non-block stream', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -153,13 +152,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FILE_SIZE_LIMIT')
+    t.equal(json.code, 'FST_MP_FILE_SIZE_LIMIT')
   })
 
-  await t.test('parts - without fields and files', async function (t) {
+  t.test('parts - without fields and files', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -174,13 +173,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FIELDS_LIMIT')
+    t.equal(json.code, 'FST_MP_FIELDS_LIMIT')
   })
 
-  await t.test('parts - with fields', async function (t) {
+  t.test('parts - with fields', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -196,13 +195,13 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FILES_LIMIT')
+    t.equal(json.code, 'FST_MP_FILES_LIMIT')
   })
 
-  await t.test('parts - with files', async function (t) {
+  t.test('parts - with files', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       adapter: FormidableAdapter,
@@ -218,9 +217,9 @@ test('FormidableAdapter - error', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 413)
+    t.equal(response.status, 413)
 
     const json = await response.json()
-    assert.equal(json.code, 'FST_MP_FIELDS_LIMIT')
+    t.equal(json.code, 'FST_MP_FIELDS_LIMIT')
   })
 })

@@ -1,6 +1,5 @@
+import { test } from '@kakang/unit'
 import { Blob } from 'buffer'
-import assert from 'node:assert/strict'
-import { test } from 'node:test'
 import { FormData } from 'undici'
 import { FormidableAdapter } from '../../../lib/adapter/formidable'
 import { Storage } from '../../../lib/storage/storage'
@@ -8,7 +7,7 @@ import { createFastify } from '../../create-fastify'
 import { request } from '../../request'
 
 test('FormidableAdapter - removeFilesFromBody', async function (t) {
-  await t.test('with addContentTypeParser', async function (t) {
+  t.test('with addContentTypeParser', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       removeFilesFromBody: true,
@@ -21,16 +20,16 @@ test('FormidableAdapter - removeFilesFromBody', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 200)
+    t.equal(response.status, 200)
 
     const json = await response.json()
 
-    assert.equal(json.body.foo, 'bar')
-    assert.equal(typeof json.body?.file, 'undefined')
-    assert.deepEqual(json.files.file, { name: 'hello_world.txt', value: 'hello_world.txt' })
+    t.equal(json.body.foo, 'bar')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.deepEqual(json.files.file, { name: 'hello_world.txt', value: 'hello_world.txt' })
   })
 
-  await t.test('with addHook', async function (t) {
+  t.test('with addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       removeFilesFromBody: true,
@@ -43,16 +42,16 @@ test('FormidableAdapter - removeFilesFromBody', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 200)
+    t.equal(response.status, 200)
 
     const json = await response.json()
 
-    assert.equal(json.body.foo, 'bar')
-    assert.equal(typeof json.body?.file, 'undefined')
-    assert.deepEqual(json.files.file, { name: 'hello_world.txt', value: 'hello_world.txt' })
+    t.equal(json.body.foo, 'bar')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.deepEqual(json.files.file, { name: 'hello_world.txt', value: 'hello_world.txt' })
   })
 
-  await t.test('with multipart', async function (t) {
+  t.test('with multipart', async function (t) {
     const fastify = await createFastify(t, {
       removeFilesFromBody: true,
       adapter: FormidableAdapter,
@@ -66,16 +65,16 @@ test('FormidableAdapter - removeFilesFromBody', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 200)
+    t.equal(response.status, 200)
 
     const json = await response.json()
 
-    assert.equal(json.body.foo, 'bar')
-    assert.equal(typeof json.body?.file, 'undefined')
-    assert.deepEqual(json.files.file, { name: 'hello_world.txt', value: 'hello_world.txt' })
+    t.equal(json.body.foo, 'bar')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.deepEqual(json.files.file, { name: 'hello_world.txt', value: 'hello_world.txt' })
   })
 
-  await t.test('with no file provided', async function (t) {
+  t.test('with no file provided', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       removeFilesFromBody: true,
@@ -87,12 +86,12 @@ test('FormidableAdapter - removeFilesFromBody', async function (t) {
     form.append('foo', 'bar')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 200)
+    t.equal(response.status, 200)
 
     const json = await response.json()
 
-    assert.equal(json.body.foo, 'bar')
-    assert.equal(typeof json.body?.file, 'undefined')
-    assert.equal(typeof json.files?.file, 'undefined')
+    t.equal(json.body.foo, 'bar')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.equal(typeof json.files?.file, 'undefined')
   })
 })

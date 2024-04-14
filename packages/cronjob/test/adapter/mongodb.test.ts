@@ -1,8 +1,7 @@
+import { test } from '@kakang/unit'
 import { parseExpression } from 'cron-parser'
 import Fastify from 'fastify'
 import { MongoClient } from 'mongodb'
-import assert from 'node:assert/strict'
-import { test } from 'node:test'
 import { fastifyCronJob } from '../../lib'
 import { MongoDBAdapter, type MongoDBAdapterOptions } from '../../lib/adapter/mongodb'
 
@@ -68,34 +67,34 @@ test('MongoDBAdapter', async function (t) {
       if (isJob(task.uid, 'interval')) {
         if (ticks[task.uid] >= 2) {
           fastify.cronjob.clearInterval(task.uid as string)
-          assert.equal(ticks[task.uid], 2)
+          t.equal(ticks[task.uid], 2)
           dones[task.uid]()
         } else {
           timestamps[task.uid][0] = now + task.delay
-          assert.equal(ticks[task.uid], 1)
+          t.equal(ticks[task.uid], 1)
         }
       } else if (isJob(task.uid, 'cron')) {
         if (ticks[task.uid] >= 2) {
           fastify.cronjob.clearInterval(task.uid as string)
-          assert.equal(ticks[task.uid] >= 2, true)
+          t.equal(ticks[task.uid] >= 2, true)
           dones[task.uid]()
         } else {
           timestamps[task.uid][0] = now + task.delay
-          assert.equal(ticks[task.uid], 1)
+          t.equal(ticks[task.uid], 1)
         }
       } else if (isJob(task.uid, 'loop')) {
         fastify.cronjob.clearInterval(task.uid as string)
-        assert.equal(ticks[task.uid] >= 1, true)
+        t.equal(ticks[task.uid] >= 1, true)
         dones[task.uid]()
       } else {
         fastify.cronjob.clearInterval(task.uid as string)
-        assert.equal(ticks[task.uid], 1)
+        t.equal(ticks[task.uid], 1)
         dones[task.uid]()
       }
 
       if (!isJob(task.uid, 'loop') && !isJob(task.uid, 'cron')) {
-        assert.equal(_from < now && now < _to, true)
-        assert.equal(diff < RANDOM_GAP, true)
+        t.equal(_from < now && now < _to, true)
+        t.equal(diff < RANDOM_GAP, true)
       }
     }
   })
@@ -147,15 +146,16 @@ test('MongoDBAdapter', async function (t) {
     await client.close(true)
   })
 
-  await t.test('fastify.cronjob', function (t, done) {
-    assert.ok(fastify.cronjob)
-    assert.equal(typeof fastify.cronjob.setTimeout, 'function')
-    assert.equal(typeof fastify.cronjob.setInterval, 'function')
-    assert.equal(typeof fastify.cronjob.setImmediate, 'function')
+  t.test('fastify.cronjob', function (t, done) {
+    const ok: typeof t.ok = t.ok
+    ok(fastify.cronjob)
+    t.equal(typeof fastify.cronjob.setTimeout, 'function')
+    t.equal(typeof fastify.cronjob.setInterval, 'function')
+    t.equal(typeof fastify.cronjob.setImmediate, 'function')
     done()
   })
 
-  await t.test('interval', async function () {
+  t.test('interval', async function () {
     const promises = [
       checkInterval(384),
       checkInterval(512),
@@ -171,7 +171,7 @@ test('MongoDBAdapter', async function (t) {
     await Promise.allSettled(promises)
   })
 
-  await t.test('timeout', async function () {
+  t.test('timeout', async function () {
     const promises = [
       checkTimeout(384),
       checkTimeout(512),
@@ -187,7 +187,7 @@ test('MongoDBAdapter', async function (t) {
     await Promise.allSettled(promises)
   })
 
-  await t.test('cronjob', async function () {
+  t.test('cronjob', async function () {
     const promises = [
       checkCronJob('* * * * * *'),
       checkCronJob('*/2 * * * * *'),
@@ -198,7 +198,7 @@ test('MongoDBAdapter', async function (t) {
     await Promise.allSettled(promises)
   })
 
-  await t.test('looptask', async function () {
+  t.test('looptask', async function () {
     const promises = [
       checkLoopTask(384)
     ]
