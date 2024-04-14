@@ -5,11 +5,10 @@ import { BufferStorage } from '../../../lib/storage/buffer'
 import { createFastify } from '../../create-fastify'
 import { request } from '../../request'
 
-import assert from 'node:assert/strict'
-import { test } from 'node:test'
+import { test } from '@kakang/unit'
 
 test('BufferStorage - removeFilesFromBody', async function (t) {
-  await t.test('with addContentTypeParser', async function (t) {
+  t.test('with addContentTypeParser', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       removeFilesFromBody: true,
@@ -22,16 +21,16 @@ test('BufferStorage - removeFilesFromBody', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 200)
+    t.equal(response.status, 200)
 
     const json = await response.json()
 
-    assert.equal(json.body.foo, 'bar')
-    assert.equal(typeof json.body?.file, 'undefined')
-    assert.deepEqual(json.files.file, { name: 'hello_world.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) } })
+    t.equal(json.body.foo, 'bar')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.deepEqual(json.files.file, { name: 'hello_world.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) } })
   })
 
-  await t.test('with addHook', async function (t) {
+  t.test('with addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       removeFilesFromBody: true,
@@ -44,16 +43,16 @@ test('BufferStorage - removeFilesFromBody', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 200)
+    t.equal(response.status, 200)
 
     const json = await response.json()
 
-    assert.equal(json.body.foo, 'bar')
-    assert.equal(typeof json.body?.file, 'undefined')
-    assert.deepEqual(json.files.file, { name: 'hello_world.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) } })
+    t.equal(json.body.foo, 'bar')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.deepEqual(json.files.file, { name: 'hello_world.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) } })
   })
 
-  await t.test('with multipart', async function (t) {
+  t.test('with multipart', async function (t) {
     const fastify = await createFastify(t, {
       removeFilesFromBody: true,
       adapter: BusboyAdapter,
@@ -67,16 +66,16 @@ test('BufferStorage - removeFilesFromBody', async function (t) {
     form.append('file', new Blob(['hello', 'world']), 'hello_world.txt')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 200)
+    t.equal(response.status, 200)
 
     const json = await response.json()
 
-    assert.equal(json.body.foo, 'bar')
-    assert.equal(typeof json.body?.file, 'undefined')
-    assert.deepEqual(json.files.file, { name: 'hello_world.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) } })
+    t.equal(json.body.foo, 'bar')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.deepEqual(json.files.file, { name: 'hello_world.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) } })
   })
 
-  await t.test('with no file provided', async function (t) {
+  t.test('with no file provided', async function (t) {
     const fastify = await createFastify(t, {
       addContentTypeParser: true,
       removeFilesFromBody: true,
@@ -88,12 +87,12 @@ test('BufferStorage - removeFilesFromBody', async function (t) {
     form.append('foo', 'bar')
 
     const response = await request(fastify.listeningOrigin, form)
-    assert.equal(response.status, 200)
+    t.equal(response.status, 200)
 
     const json = await response.json()
 
-    assert.equal(json.body.foo, 'bar')
-    assert.equal(typeof json.body?.file, 'undefined')
-    assert.equal(typeof json.files?.file, 'undefined')
+    t.equal(json.body.foo, 'bar')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.equal(typeof json.files?.file, 'undefined')
   })
 })
