@@ -1,5 +1,5 @@
 {
-  "extends": "standard-with-typescript",
+  "extends": "love",
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -11,6 +11,7 @@
     {
       "files": ["**/*.test.ts"],
       "rules": {
+        "no-lone-blocks": "warn",
         "@typescript-eslint/no-floating-promises": "off"
       }
     },
