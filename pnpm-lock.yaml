@@ -261,8 +261,8 @@ importers:
         specifier: ^5.0.7
         version: 5.0.7
       fast-jwt:
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^4.0.1
+        version: 4.0.1
       fastify-plugin:
         specifier: ^4.5.1
         version: 4.5.1
@@ -1616,9 +1616,9 @@ packages:
       rfdc: 1.3.0
     dev: true
 
-  /fast-jwt@4.0.0:
-    resolution: {integrity: sha512-CnI93Tmk7eSzfw4e0Jlc5ZcWiN+/zK7xAKAhtXS8PAcKmYqfcXqxJl1hMyhk3iEt0M9JLo7DCYRDV2XcIacWAw==}
-    engines: {node: '>=16 <22'}
+  /fast-jwt@4.0.1:
+    resolution: {integrity: sha512-+mdSoH0QdOdFSbbGBctJu7L1yfXRtbmjbVJ4W/PEjyvivobDena0RKwihtBkOML1P+kUJ1QuewnH8u+mROsR1w==}
+    engines: {node: '>=16'}
     dependencies:
       '@lukeed/ms': 2.0.2
       asn1.js: 5.4.1
