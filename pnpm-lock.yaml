@@ -267,8 +267,8 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1
       jose:
-        specifier: ^5.2.4
-        version: 5.2.4
+        specifier: ^5.3.0
+        version: 5.3.0
       simple-oauth2:
         specifier: ^5.0.0
         version: 5.0.0
@@ -2175,8 +2175,8 @@ packages:
       '@sideway/pinpoint': 2.0.0
     dev: false
 
-  /jose@5.2.4:
-    resolution: {integrity: sha512-6ScbIk2WWCeXkmzF6bRPmEuaqy1m8SbsRFMa/FLrSCkGIhj8OLVG/IH+XHVmNMx/KUo8cVWEE6oKR4dJ+S0Rkg==}
+  /jose@5.3.0:
+    resolution: {integrity: sha512-IChe9AtAE79ru084ow8jzkN2lNrG3Ntfiv65Cvj9uOCE2m5LNsdHG+9EbxWxAoWRF9TgDOqLN5jm08++owDVRg==}
     dev: false
 
   /js-yaml@4.1.0:
