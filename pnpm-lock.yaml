@@ -112,8 +112,8 @@ importers:
         specifier: ^4.27.0
         version: 4.27.0
       mongodb:
-        specifier: ^6.6.1
-        version: 6.6.1
+        specifier: ^6.6.2
+        version: 6.6.2
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -170,8 +170,8 @@ importers:
         specifier: ^4.27.0
         version: 4.27.0
       mongodb:
-        specifier: ^6.6.1
-        version: 6.6.1
+        specifier: ^6.6.2
+        version: 6.6.2
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -2306,8 +2306,8 @@ packages:
       whatwg-url: 13.0.0
     dev: true
 
-  /mongodb@6.6.1:
-    resolution: {integrity: sha512-FvA9ocQzRzzvhin1HHLrZDEm0gWvnksbiciYrU/0GmET/t/DdDiMJroA7rfDrHM3AInwGVYw2fwAU2oNYUyUEw==}
+  /mongodb@6.6.2:
+    resolution: {integrity: sha512-ZF9Ugo2JCG/GfR7DEb4ypfyJJyiKbg5qBYKRintebj8+DNS33CyGMkWbrS9lara+u+h+yEOGSRiLhFO/g1s1aw==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
