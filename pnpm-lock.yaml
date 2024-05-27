@@ -40,7 +40,7 @@ importers:
         version: 8.57.0
       eslint-config-love:
         specifier: ^47.0.0
-        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.57.0)(typescript@5.3.3)
+        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.2.0)(eslint@8.57.0)(typescript@5.3.3)
       eslint-plugin-import:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)
@@ -48,8 +48,8 @@ importers:
         specifier: ^17.7.0
         version: 17.7.0(eslint@8.57.0)
       eslint-plugin-promise:
-        specifier: ^6.1.1
-        version: 6.1.1(eslint@8.57.0)
+        specifier: ^6.2.0
+        version: 6.2.0(eslint@8.57.0)
       fastify:
         specifier: ^4.27.0
         version: 4.27.0
@@ -98,7 +98,7 @@ importers:
         version: 8.57.0
       eslint-config-love:
         specifier: ^47.0.0
-        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.57.0)(typescript@5.3.3)
+        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.2.0)(eslint@8.57.0)(typescript@5.3.3)
       eslint-plugin-import:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)
@@ -106,8 +106,8 @@ importers:
         specifier: ^17.7.0
         version: 17.7.0(eslint@8.57.0)
       eslint-plugin-promise:
-        specifier: ^6.1.1
-        version: 6.1.1(eslint@8.57.0)
+        specifier: ^6.2.0
+        version: 6.2.0(eslint@8.57.0)
       fastify:
         specifier: ^4.27.0
         version: 4.27.0
@@ -156,7 +156,7 @@ importers:
         version: 8.57.0
       eslint-config-love:
         specifier: ^47.0.0
-        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.57.0)(typescript@5.3.3)
+        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.2.0)(eslint@8.57.0)(typescript@5.3.3)
       eslint-plugin-import:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)
@@ -164,8 +164,8 @@ importers:
         specifier: ^17.7.0
         version: 17.7.0(eslint@8.57.0)
       eslint-plugin-promise:
-        specifier: ^6.1.1
-        version: 6.1.1(eslint@8.57.0)
+        specifier: ^6.2.0
+        version: 6.2.0(eslint@8.57.0)
       fastify:
         specifier: ^4.27.0
         version: 4.27.0
@@ -223,7 +223,7 @@ importers:
         version: 8.57.0
       eslint-config-love:
         specifier: ^47.0.0
-        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.57.0)(typescript@5.3.3)
+        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.2.0)(eslint@8.57.0)(typescript@5.3.3)
       eslint-plugin-import:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)
@@ -231,8 +231,8 @@ importers:
         specifier: ^17.7.0
         version: 17.7.0(eslint@8.57.0)
       eslint-plugin-promise:
-        specifier: ^6.1.1
-        version: 6.1.1(eslint@8.57.0)
+        specifier: ^6.2.0
+        version: 6.2.0(eslint@8.57.0)
       fastify:
         specifier: ^4.27.0
         version: 4.27.0
@@ -296,7 +296,7 @@ importers:
         version: 8.57.0
       eslint-config-love:
         specifier: ^47.0.0
-        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.57.0)(typescript@5.3.3)
+        version: 47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.2.0)(eslint@8.57.0)(typescript@5.3.3)
       eslint-plugin-import:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)
@@ -304,8 +304,8 @@ importers:
         specifier: ^17.7.0
         version: 17.7.0(eslint@8.57.0)
       eslint-plugin-promise:
-        specifier: ^6.1.1
-        version: 6.1.1(eslint@8.57.0)
+        specifier: ^6.2.0
+        version: 6.2.0(eslint@8.57.0)
       fastify:
         specifier: ^4.27.0
         version: 4.27.0
@@ -1328,7 +1328,7 @@ packages:
       eslint: 8.57.0
     dev: true
 
-  /eslint-config-love@47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.57.0)(typescript@5.3.3):
+  /eslint-config-love@47.0.0(@typescript-eslint/eslint-plugin@7.9.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.7.0)(eslint-plugin-promise@6.2.0)(eslint@8.57.0)(typescript@5.3.3):
     resolution: {integrity: sha512-wIeJhb4/NF7nE5Ltppg1e9dp1Auxx0+ZPRysrXQ3uBKlW4Nj/UiTZu4r3sKWCxo6HGcRcI4MC1Q5421y3fny2w==}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': ^7.0.1
@@ -1343,7 +1343,7 @@ packages:
       eslint: 8.57.0
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)
       eslint-plugin-n: 17.7.0(eslint@8.57.0)
-      eslint-plugin-promise: 6.1.1(eslint@8.57.0)
+      eslint-plugin-promise: 6.2.0(eslint@8.57.0)
       typescript: 5.3.3
     transitivePeerDependencies:
       - supports-color
@@ -1452,11 +1452,11 @@ packages:
       semver: 7.6.0
     dev: true
 
-  /eslint-plugin-promise@6.1.1(eslint@8.57.0):
-    resolution: {integrity: sha512-tjqWDwVZQo7UIPMeDReOpUgHCmCiH+ePnVT+5zVapL0uuHnegBUs2smM13CzOs2Xb5+MHMRFTs9v24yjba4Oig==}
+  /eslint-plugin-promise@6.2.0(eslint@8.57.0):
+    resolution: {integrity: sha512-QmAqwizauvnKOlifxyDj2ObfULpHQawlg/zQdgEixur9vl0CvZGv/LCJV2rtj3210QCoeGBzVMfMXqGAOr/4fA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
-      eslint: ^7.0.0 || ^8.0.0
+      eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
     dependencies:
       eslint: 8.57.0
     dev: true
