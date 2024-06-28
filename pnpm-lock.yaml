@@ -112,8 +112,8 @@ importers:
         specifier: ^4.27.0
         version: 4.27.0
       mongodb:
-        specifier: ^6.6.1
-        version: 6.6.1
+        specifier: ^6.8.0
+        version: 6.8.0
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -170,8 +170,8 @@ importers:
         specifier: ^4.27.0
         version: 4.27.0
       mongodb:
-        specifier: ^6.6.1
-        version: 6.6.1
+        specifier: ^6.8.0
+        version: 6.8.0
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -1381,8 +1381,8 @@ packages:
   mongodb-connection-string-url@3.0.0:
     resolution: {integrity: sha512-t1Vf+m1I5hC2M5RJx/7AtxgABy1cZmIPQRMXw+gEIPn/cZNF3Oiy+l0UIypUwVB5trcWHq3crg2g3uAR9aAwsQ==}
 
-  mongodb@6.6.1:
-    resolution: {integrity: sha512-FvA9ocQzRzzvhin1HHLrZDEm0gWvnksbiciYrU/0GmET/t/DdDiMJroA7rfDrHM3AInwGVYw2fwAU2oNYUyUEw==}
+  mongodb@6.8.0:
+    resolution: {integrity: sha512-HGQ9NWDle5WvwMnrvUxsFYPd3JEbqD3RgABHBQRuoCEND0qzhsd0iH5ypHsf1eJ+sXmvmyKpP+FLOKY8Il7jMw==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
@@ -3092,7 +3092,7 @@ snapshots:
       '@types/whatwg-url': 11.0.3
       whatwg-url: 13.0.0
 
-  mongodb@6.6.1:
+  mongodb@6.8.0:
     dependencies:
       '@mongodb-js/saslprep': 1.1.5
       bson: 6.7.0
