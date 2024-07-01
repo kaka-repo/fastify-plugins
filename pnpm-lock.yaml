@@ -270,8 +270,8 @@ importers:
         specifier: ^5.6.2
         version: 5.6.2
       simple-oauth2:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^5.1.0
+        version: 5.1.0
     devDependencies:
       '@kakang/unit':
         specifier: ^0.0.2
@@ -370,9 +370,6 @@ packages:
 
   '@hapi/bourne@3.0.0':
     resolution: {integrity: sha512-Waj1cwPXJDucOib4a3bAISsKJVb15MKi9IvmTI/7ssVEm6sywXGjVJDhl6/umt1pK1ZS7PacXU3A1PmFKHEZ2w==}
-
-  '@hapi/hoek@10.0.1':
-    resolution: {integrity: sha512-CvlW7jmOhWzuqOqiJQ3rQVLMcREh0eel4IBnxDx2FAcK8g7qoJRQK4L1CPBASoCY6y8e6zuCy3f2g+HWdkzcMw==}
 
   '@hapi/hoek@11.0.4':
     resolution: {integrity: sha512-PnsP5d4q7289pS2T2EgGz147BFJ2Jpb4yrEdkpz2IhgEUzos1S7HTl7ezWh1yfYzYlj89KzLdCRkqsP6SIryeQ==}
@@ -1660,8 +1657,8 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  simple-oauth2@5.0.0:
-    resolution: {integrity: sha512-8291lo/z5ZdpmiOFzOs1kF3cxn22bMj5FFH+DNUppLJrpoIlM1QnFiE7KpshHu3J3i21TVcx4yW+gXYjdCKDLQ==}
+  simple-oauth2@5.1.0:
+    resolution: {integrity: sha512-gWDa38Ccm4MwlG5U7AlcJxPv3lvr80dU7ARJWrGdgvOKyzSj1gr3GBPN1rABTedAYvC/LsGYoFuFxwDBPtGEbw==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -1933,8 +1930,6 @@ snapshots:
       '@hapi/hoek': 11.0.4
 
   '@hapi/bourne@3.0.0': {}
-
-  '@hapi/hoek@10.0.1': {}
 
   '@hapi/hoek@11.0.4': {}
 
@@ -3340,9 +3335,9 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  simple-oauth2@5.0.0:
+  simple-oauth2@5.1.0:
     dependencies:
-      '@hapi/hoek': 10.0.1
+      '@hapi/hoek': 11.0.4
       '@hapi/wreck': 18.0.1
       debug: 4.3.4
       joi: 17.12.1
