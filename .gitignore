@@ -123,5 +123,4 @@ dist
 
 #
 yarn.lock
-!jest.config.js
-!rollup.config.js
+!eslint.config.js
