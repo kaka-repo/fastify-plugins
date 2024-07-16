@@ -1,17 +1,10 @@
 'use strict'
 
+const neostandard = require('neostandard')
+
 module.exports = [
   {
-    ignores: ['**/*.d.ts']
+    ignores: ['**/*.d.ts'],
   },
-  {
-    ...require('eslint-config-love'),
-    files: ['**/*.mjs', '**/*.ts']
-  },
-  {
-    files: ['**/*.test.ts'],
-    rules: {
-      "@typescript-eslint/no-floating-promises": "off"
-    }
-  }
+  ...neostandard({ ts: true }),
 ]

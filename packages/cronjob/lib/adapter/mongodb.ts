@@ -35,8 +35,8 @@ export class MongoDBAdapter extends Adapter {
   async fetchTasks (executeAt: number): Promise<Task[]> {
     const cursor = this.collection.find<Task>({
       executeAt: {
-        $lte: executeAt
-      }
+        $lte: executeAt,
+      },
     })
     return await cursor.toArray()
   }
@@ -50,7 +50,7 @@ export class MongoDBAdapter extends Adapter {
         once: task.once ?? false,
         delay: task.delay,
         executeAt,
-        isDeleted: false
+        isDeleted: false,
       })
     } else {
       const $set: any = { isDeleted: false }
@@ -62,9 +62,9 @@ export class MongoDBAdapter extends Adapter {
       }
       if ($set !== null) {
         await this.collection.updateOne({
-          uid: task.uid
+          uid: task.uid,
         }, {
-          $set
+          $set,
         })
       }
     }
@@ -73,23 +73,23 @@ export class MongoDBAdapter extends Adapter {
   async updateTasks (uids: string[], executeAt: number): Promise<void> {
     await this.collection.updateMany({
       uid: {
-        $in: uids
-      }
+        $in: uids,
+      },
     }, {
       $set: {
-        executeAt
-      }
+        executeAt,
+      },
     })
   }
 
   async updateTask (uid: string, executeAt: number, isDeleted: boolean): Promise<Task | null> {
     const result = await this.collection.findOneAndUpdate({
-      uid
+      uid,
     }, {
       $set: {
         executeAt,
-        isDeleted
-      }
+        isDeleted,
+      },
     })
     return result as Task | null
   }

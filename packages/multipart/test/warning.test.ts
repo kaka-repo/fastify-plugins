@@ -21,7 +21,7 @@ test('multipart already parsed', async function (t) {
     await fastify.register(FastifyMultipart, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     fastify.post<{ Body: { foo: string, file: string } }>('/', {
@@ -29,14 +29,14 @@ test('multipart already parsed', async function (t) {
         request.log = {
           warn (msg: string) {
             t.equal(msg, 'multipart already parsed, you probably need to check your code why it is parsed twice.')
-          }
+          },
         } as any
         done()
-      }
+      },
     }, async function (request, reply) {
       return await reply.code(200).send({
         body: request.body,
-        files: request.files
+        files: request.files,
       })
     })
 
@@ -66,7 +66,7 @@ test('multipart already parsed', async function (t) {
     await fastify.register(FastifyMultipart, {
       addContentTypeParser: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     fastify.post<{ Body: { foo: string, file: string } }>('/', {
@@ -74,15 +74,15 @@ test('multipart already parsed', async function (t) {
         request.log = {
           warn (msg: string) {
             t.equal(msg, 'multipart already parsed, you probably need to check your code why it is parsed twice.')
-          }
+          },
         } as any
         done()
-      }
+      },
     }, async function (request, reply) {
       await request.parseMultipart()
       return await reply.code(200).send({
         body: request.body,
-        files: request.files
+        files: request.files,
       })
     })
 
@@ -113,7 +113,7 @@ test('multipart already parsed', async function (t) {
     await fastify.register(FastifyMultipart, {
       addContentTypeParser: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     fastify.post<{ Body: { foo: string, file: string } }>('/', {
@@ -121,10 +121,10 @@ test('multipart already parsed', async function (t) {
         request.log = {
           warn (msg: string) {
             t.equal(msg, 'multipart already parsed, you probably need to check your code why it is parsed twice.')
-          }
+          },
         } as any
         done()
-      }
+      },
     }, async function (request, reply) {
       for await (const notExist of request.multipart()) {
         ok(notExist, 'alreadyed parsed should not be iteratable')
@@ -132,7 +132,7 @@ test('multipart already parsed', async function (t) {
 
       return await reply.code(200).send({
         body: request.body,
-        files: request.files
+        files: request.files,
       })
     })
 

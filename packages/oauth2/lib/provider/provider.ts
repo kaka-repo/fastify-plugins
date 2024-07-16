@@ -19,7 +19,6 @@ export abstract class Provider {
   }
 
   async getToken (request: FastifyRequest, options: AuthorizationTokenConfig | PasswordTokenConfig | ClientCredentialTokenConfig, httpOptions?: WreckHttpOptions): Promise<AccessToken> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return await this.client.getToken(options as any, httpOptions)
   }
 
@@ -57,7 +56,7 @@ export class AuthorizationCodeProvider<ClientIdName extends string = 'client_id'
 
     return this.client.authorizeURL({
       ...options,
-      redirect_uri: redirectURI.href
+      redirect_uri: redirectURI.href,
     })
   }
 
@@ -70,7 +69,7 @@ export class AuthorizationCodeProvider<ClientIdName extends string = 'client_id'
 
     return await this.client.getToken({
       ...options,
-      redirect_uri: redirectURI.href
+      redirect_uri: redirectURI.href,
     }, httpOptions)
   }
 }

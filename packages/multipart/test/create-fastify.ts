@@ -27,7 +27,6 @@ export async function createFastify (t: TestContext, options?: FastifyMultipartO
       for await (const { type, name, value, info } of request.multipart()) {
         switch (type) {
           case 'field': {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             request[kAdapter]._update(body, name, value)
             break
           }
@@ -35,7 +34,6 @@ export async function createFastify (t: TestContext, options?: FastifyMultipartO
             const file = await request[kStorage].save(name, value, info)
             request[kAdapter]._update(files as Files, file.name, file.value)
             if (options?.removeFilesFromBody !== true) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               request[kAdapter]._update(body, file.name, file.value.value as string)
             }
             break
@@ -48,7 +46,7 @@ export async function createFastify (t: TestContext, options?: FastifyMultipartO
     }
     return await reply.code(200).send({
       body: request.body,
-      files: request.files
+      files: request.files,
     })
   })
 

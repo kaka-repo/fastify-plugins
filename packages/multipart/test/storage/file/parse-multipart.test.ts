@@ -14,9 +14,9 @@ test('FileStorage - parseMultipart', async function (t) {
     const ok: typeof t.ok = t.ok
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -42,9 +42,9 @@ test('FileStorage - parseMultipart', async function (t) {
     const ok: typeof t.ok = t.ok
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -72,9 +72,9 @@ test('FileStorage - parseMultipart', async function (t) {
     const ok: typeof t.ok = t.ok
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()

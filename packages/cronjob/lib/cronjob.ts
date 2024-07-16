@@ -81,7 +81,7 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
     await this.adapter.createTask({
       uid,
       once: false,
-      delay: ms
+      delay: ms,
     })
     return uid
   }
@@ -105,7 +105,7 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
     await this.adapter.createTask({
       uid,
       once: true,
-      delay: ms
+      delay: ms,
     })
     return uid
   }
@@ -128,7 +128,7 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
     await this.adapter.createTask({
       uid,
       once: true,
-      delay: 0
+      delay: 0,
     })
     return uid
   }
@@ -161,7 +161,7 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
         // we execute immediately for the next task
         Promise.race([
           executor(context),
-          this.#setCronJob(executor, cron, uid, false, context)
+          this.#setCronJob(executor, cron, uid, false, context),
         ]).catch((err) => {
           this.emit('error', err)
         })
@@ -278,7 +278,7 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
     this.emit('executed', {
       uid: task.uid,
       delay: task.delay,
-      timestamp
+      timestamp,
     })
     // when it allows to run multiple times
     // we update the executedAt information

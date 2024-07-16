@@ -12,7 +12,7 @@ test('BusboyAdapter - removeFilesFromBody', async function (t) {
       addContentTypeParser: true,
       removeFilesFromBody: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()
@@ -34,7 +34,7 @@ test('BusboyAdapter - removeFilesFromBody', async function (t) {
       addHook: true,
       removeFilesFromBody: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()
@@ -55,9 +55,9 @@ test('BusboyAdapter - removeFilesFromBody', async function (t) {
     const fastify = await createFastify(t, {
       removeFilesFromBody: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -79,7 +79,7 @@ test('BusboyAdapter - removeFilesFromBody', async function (t) {
       addContentTypeParser: true,
       removeFilesFromBody: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()

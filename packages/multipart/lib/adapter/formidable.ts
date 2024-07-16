@@ -21,7 +21,7 @@ export class FormidableAdapter extends Adapter {
       maxFieldsSize: option.limits?.fieldSize,
       maxFiles: option.limits?.files ?? option.limits?.parts,
       maxFileSize: option.limits?.fileSize,
-      maxTotalFileSize: (option.limits?.fieldSize ?? 200 * 1024 * 1024) * (option.limits?.files ?? option.limits?.parts ?? 20)
+      maxTotalFileSize: (option.limits?.fieldSize ?? 200 * 1024 * 1024) * (option.limits?.files ?? option.limits?.parts ?? 20),
     })
     this.#removeFromBody = option.removeFilesFromBody ?? false
     this.#storage = request[kStorage]
@@ -73,8 +73,8 @@ export class FormidableAdapter extends Adapter {
           value: fs.createReadStream(file.filepath),
           info: {
             filename: file.originalFilename,
-            mimeType: file.mimetype
-          }
+            mimeType: file.mimetype,
+          },
         })
       }
     })
@@ -147,7 +147,7 @@ export class FormidableAdapter extends Adapter {
           const done = (ended && stack.length === 0)
           return {
             value: stack.shift(),
-            done
+            done,
           }
         }
       },
@@ -158,7 +158,7 @@ export class FormidableAdapter extends Adapter {
         onDone()
         return {
           value: undefined,
-          done: true
+          done: true,
         }
       },
       // not able to test but good to have
@@ -168,12 +168,12 @@ export class FormidableAdapter extends Adapter {
         onDone()
         return {
           value: undefined,
-          done: true
+          done: true,
         }
       },
       [Symbol.asyncIterator] () {
         return this
-      }
+      },
     }
   }
 }

@@ -15,14 +15,14 @@ export function build <T = EnvSchemaData> (options: EnvSchemaOpt<T>): { env: T, 
     decorators: {
       fastify: [],
       request: [],
-      reply: []
+      reply: [],
     },
     dependencies: [],
-    encapsulate: false
+    encapsulate: false,
   })
 
   return {
     env,
-    plugin
+    plugin,
   }
 }

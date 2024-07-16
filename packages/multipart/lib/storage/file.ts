@@ -13,7 +13,6 @@ export interface FileStorageOption {
 }
 
 export class FileStorage extends Storage {
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly
   #uploadDir: string
 
   constructor (option?: FastifyMultipartOption['storageOption']) {

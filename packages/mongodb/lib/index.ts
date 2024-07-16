@@ -26,7 +26,7 @@ const plugin: FastifyPluginAsync<fastifyMongoDBOption> = async function (fastify
     // we need to reduce the timeout to prevent
     // wait time longer than avvio timeout
     serverSelectionTimeoutMS: 7500,
-    ...option.options
+    ...option.options,
   })
 
   // verify connection
@@ -51,7 +51,7 @@ const plugin: FastifyPluginAsync<fastifyMongoDBOption> = async function (fastify
   const mongodb = {
     client,
     db,
-    withTransaction
+    withTransaction,
   }
 
   fastify.decorate('mongodb', mongodb)
@@ -67,8 +67,8 @@ export const fastifyMongoDB = FastifyPlugin(plugin, {
   decorators: {
     fastify: [],
     request: [],
-    reply: []
+    reply: [],
   },
   dependencies: [],
-  encapsulate: false
+  encapsulate: false,
 })

@@ -11,7 +11,7 @@ test('BusboyAdapter - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()
@@ -32,7 +32,7 @@ test('BusboyAdapter - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()
@@ -55,7 +55,7 @@ test('BusboyAdapter - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()
@@ -74,7 +74,7 @@ test('BusboyAdapter - addHook', async function (t) {
     t.deepEqual(json.files.file, [
       { name: 'hello_world1.txt', value: 'hello_world1.txt' },
       { name: 'hello_world2.txt', value: 'hello_world2.txt' },
-      { name: 'hello_world3.txt', value: 'hello_world3.txt' }
+      { name: 'hello_world3.txt', value: 'hello_world3.txt' },
     ])
   })
 })

@@ -13,8 +13,8 @@ test('FormidableAdapter - error', async function (t) {
       adapter: FormidableAdapter,
       storage: Storage,
       limits: {
-        fields: 0
-      }
+        fields: 0,
+      },
     })
 
     const form = new FormData()
@@ -34,8 +34,8 @@ test('FormidableAdapter - error', async function (t) {
       adapter: FormidableAdapter,
       storage: Storage,
       limits: {
-        fieldSize: 0
-      }
+        fieldSize: 0,
+      },
     })
 
     const form = new FormData()
@@ -55,8 +55,8 @@ test('FormidableAdapter - error', async function (t) {
       adapter: FormidableAdapter,
       storage: Storage,
       limits: {
-        files: 0
-      }
+        files: 0,
+      },
     })
 
     const form = new FormData()
@@ -76,8 +76,8 @@ test('FormidableAdapter - error', async function (t) {
       adapter: FormidableAdapter,
       storage: Storage,
       limits: {
-        fileSize: 0
-      }
+        fileSize: 0,
+      },
     })
 
     const form = new FormData()
@@ -98,8 +98,8 @@ test('FormidableAdapter - error', async function (t) {
       storage: Storage,
       limits: {
         files: 1,
-        fileSize: 0
-      }
+        fileSize: 0,
+      },
     })
 
     const form = new FormData()
@@ -120,8 +120,8 @@ test('FormidableAdapter - error', async function (t) {
       storage: Storage,
       limits: {
         parts: 1,
-        fileSize: 0
-      }
+        fileSize: 0,
+      },
     })
 
     const form = new FormData()
@@ -141,8 +141,8 @@ test('FormidableAdapter - error', async function (t) {
       adapter: FormidableAdapter,
       storage: Storage,
       limits: {
-        fileSize: 0
-      }
+        fileSize: 0,
+      },
     })
 
     const form = new FormData()
@@ -164,8 +164,8 @@ test('FormidableAdapter - error', async function (t) {
       adapter: FormidableAdapter,
       storage: Storage,
       limits: {
-        parts: 0
-      }
+        parts: 0,
+      },
     })
 
     const form = new FormData()
@@ -186,8 +186,8 @@ test('FormidableAdapter - error', async function (t) {
       storage: Storage,
       limits: {
         fields: 1,
-        parts: 0
-      }
+        parts: 0,
+      },
     })
 
     const form = new FormData()
@@ -208,8 +208,8 @@ test('FormidableAdapter - error', async function (t) {
       storage: Storage,
       limits: {
         files: 1,
-        parts: 0
-      }
+        parts: 0,
+      },
     })
 
     const form = new FormData()

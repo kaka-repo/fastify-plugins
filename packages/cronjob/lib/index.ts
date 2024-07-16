@@ -30,7 +30,7 @@ const plugin: FastifyPluginAsync<FastifyCronJobOption> = async function (fastify
   const cronjob = new CronJob<any>({
     context: fastify,
     ...option,
-    adapter
+    adapter,
   })
 
   fastify.decorate('cronjob', cronjob)
@@ -46,8 +46,8 @@ export const fastifyCronJob = FastifyPlugin(plugin, {
   decorators: {
     fastify: [],
     request: [],
-    reply: []
+    reply: [],
   },
   dependencies: [],
-  encapsulate: false
+  encapsulate: false,
 })

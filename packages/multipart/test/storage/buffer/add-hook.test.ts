@@ -11,7 +11,7 @@ test('BufferStorage - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: BufferStorage
+      storage: BufferStorage,
     })
 
     const form = new FormData()
@@ -32,7 +32,7 @@ test('BufferStorage - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: BufferStorage
+      storage: BufferStorage,
     })
 
     const form = new FormData()
@@ -55,7 +55,7 @@ test('BufferStorage - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: BufferStorage
+      storage: BufferStorage,
     })
 
     const form = new FormData()
@@ -73,12 +73,12 @@ test('BufferStorage - addHook', async function (t) {
     t.deepEqual(json.body.file, [
       { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) },
       { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworld').map(Number)) },
-      { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworldhelloworld').map(Number)) }
+      { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworldhelloworld').map(Number)) },
     ])
     t.deepEqual(json.files.file, [
       { name: 'hello_world1.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) } },
       { name: 'hello_world2.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworld').map(Number)) } },
-      { name: 'hello_world3.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworldhelloworld').map(Number)) } }
+      { name: 'hello_world3.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworldhelloworld').map(Number)) } },
     ])
   })
 })

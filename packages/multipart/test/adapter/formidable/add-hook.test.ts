@@ -11,7 +11,7 @@ test('FormidableAdapter - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: FormidableAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()
@@ -32,7 +32,7 @@ test('FormidableAdapter - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: FormidableAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()
@@ -55,7 +55,7 @@ test('FormidableAdapter - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: FormidableAdapter,
-      storage: Storage
+      storage: Storage,
     })
 
     const form = new FormData()

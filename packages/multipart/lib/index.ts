@@ -65,7 +65,6 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
   fastify.decorateRequest(kIsMultipartParsed, false)
   fastify.decorateRequest('files', null)
   fastify.decorateRequest('parseMultipart', async function (this: FastifyRequest) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const request = this
 
     // skip if not multipart
@@ -93,7 +92,6 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
     return request.body
   })
   fastify.decorateRequest('multipart', function (this: FastifyRequest): AsyncIterableIterator<AdapterIteratorResult> {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const request = this
 
     // skip if not multipart
@@ -104,7 +102,7 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
         },
         [Symbol.asyncIterator] () {
           return this
-        }
+        },
       }
     }
     // skip if already parsed
@@ -116,7 +114,7 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
         },
         [Symbol.asyncIterator] () {
           return this
-        }
+        },
       }
     }
 
@@ -146,7 +144,7 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
         await iterator?.return?.()
         return {
           value: undefined,
-          done: true
+          done: true,
         }
       },
       // not able to test but good to have
@@ -155,12 +153,12 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
         await iterator?.throw?.(err)
         return {
           value: undefined,
-          done: true
+          done: true,
         }
       },
       [Symbol.asyncIterator] () {
         return this
-      }
+      },
     }
   })
 
@@ -226,7 +224,7 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
       // so, we use Promise.allSettled here
       await Promise.allSettled([
         request[kAdapter].cleanup(fastify),
-        request[kStorage].cleanup(fastify)
+        request[kStorage].cleanup(fastify),
       ])
     }
   })
@@ -236,7 +234,7 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
     // so, we use Promise.allSettled here
     await Promise.allSettled([
       Adapter.cleanup(fastify),
-      Storage.cleanup(fastify)
+      Storage.cleanup(fastify),
     ])
   })
 }
@@ -244,6 +242,6 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
 export const FastifyMultipart = FastifyPlugin(plugin, {
   fastify: '4.x',
   name: '@kakang/fastify-multipart',
-  dependencies: []
+  dependencies: [],
 })
 export default FastifyMultipart

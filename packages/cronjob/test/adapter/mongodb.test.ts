@@ -31,7 +31,7 @@ test('MongoDBAdapter', async function (t) {
   const fastify = Fastify()
 
   const adapterOption: MongoDBAdapterOptions = {
-    db
+    db,
   }
   await fastify.register(fastifyCronJob, {
     application: t.name,
@@ -39,7 +39,7 @@ test('MongoDBAdapter', async function (t) {
     adapterOption,
     minTickMS,
     maxTickMS,
-    maxExecutionMS: 8000
+    maxExecutionMS: 8000,
   })
 
   fastify.cronjob.on('executed', function (task) {
@@ -166,7 +166,7 @@ test('MongoDBAdapter', async function (t) {
       checkInterval(789),
       checkInterval(800),
       checkInterval(801),
-      checkInterval(802)
+      checkInterval(802),
     ]
     await Promise.allSettled(promises)
   })
@@ -182,7 +182,7 @@ test('MongoDBAdapter', async function (t) {
       checkTimeout(789),
       checkTimeout(800),
       checkTimeout(801),
-      checkTimeout(802)
+      checkTimeout(802),
     ]
     await Promise.allSettled(promises)
   })
@@ -193,14 +193,14 @@ test('MongoDBAdapter', async function (t) {
       checkCronJob('*/2 * * * * *'),
       checkCronJob('*/3 * * * * *'),
       checkCronJob('*/4 * * * * *'),
-      checkCronJob('*/5 * * * * *')
+      checkCronJob('*/5 * * * * *'),
     ]
     await Promise.allSettled(promises)
   })
 
   t.test('looptask', async function () {
     const promises = [
-      checkLoopTask(384)
+      checkLoopTask(384),
     ]
     await Promise.allSettled(promises)
   })

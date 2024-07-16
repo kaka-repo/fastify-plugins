@@ -38,7 +38,7 @@ test('register', async function (t) {
 
   fastify.register(fastifyMongoDB, {
     url: MONGODB_URI,
-    database: 'foobar'
+    database: 'foobar',
   })
 
   await fastify.ready()
@@ -59,7 +59,7 @@ test('register', async function (t) {
 
   fastify.register(fastifyMongoDB, {
     url: MONGODB_URI,
-    database: 'foobar'
+    database: 'foobar',
   })
 
   await fastify.ready()
@@ -79,7 +79,7 @@ test('functional', async function (t) {
 
   fastify.register(fastifyMongoDB, {
     url: MONGODB_URI,
-    database: 'foobar'
+    database: 'foobar',
   })
 
   await fastify.ready()
@@ -97,7 +97,7 @@ test('functional', async function (t) {
 
   fastify.register(fastifyMongoDB, {
     url: MONGODB_URI,
-    database: 'foobar'
+    database: 'foobar',
   })
 
   await fastify.ready()

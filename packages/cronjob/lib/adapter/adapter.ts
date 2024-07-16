@@ -1,7 +1,6 @@
 import { type CreateTask, type Task } from '../cronjob'
 import { kAdapter } from '../symbols'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AdapterOptions {
 }
 

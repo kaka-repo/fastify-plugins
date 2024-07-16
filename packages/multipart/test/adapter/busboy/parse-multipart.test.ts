@@ -10,9 +10,9 @@ test('BusboyAdapter - parseMultipart', async function (t) {
   t.test('single file', async function (t) {
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -32,9 +32,9 @@ test('BusboyAdapter - parseMultipart', async function (t) {
   t.test('multiple fields', async function (t) {
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -56,9 +56,9 @@ test('BusboyAdapter - parseMultipart', async function (t) {
   t.test('multiple files', async function (t) {
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -77,7 +77,7 @@ test('BusboyAdapter - parseMultipart', async function (t) {
     t.deepEqual(json.files.file, [
       { name: 'hello_world1.txt', value: 'hello_world1.txt' },
       { name: 'hello_world2.txt', value: 'hello_world2.txt' },
-      { name: 'hello_world3.txt', value: 'hello_world3.txt' }
+      { name: 'hello_world3.txt', value: 'hello_world3.txt' },
     ])
   })
 })

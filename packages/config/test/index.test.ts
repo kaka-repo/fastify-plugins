@@ -22,11 +22,11 @@ test('envfile', async function (t) {
       schema: {
         type: 'object',
         properties: {
-          FOO: { type: 'string' }
-        }
+          FOO: { type: 'string' },
+        },
       },
       data: process.env,
-      dotenv: { path: tmpEnv }
+      dotenv: { path: tmpEnv },
     })
 
     ok(env)

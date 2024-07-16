@@ -10,9 +10,9 @@ test('FormidableAdapter - multipart', async function (t) {
   t.test('single file', async function (t) {
     const fastify = await createFastify(t, {
       adapter: FormidableAdapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      iterator: true
+      iterator: true,
     })
 
     const form = new FormData()
@@ -32,9 +32,9 @@ test('FormidableAdapter - multipart', async function (t) {
   t.test('multiple fields', async function (t) {
     const fastify = await createFastify(t, {
       adapter: FormidableAdapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      iterator: true
+      iterator: true,
     })
 
     const form = new FormData()
@@ -56,9 +56,9 @@ test('FormidableAdapter - multipart', async function (t) {
   t.test('multiple files', async function (t) {
     const fastify = await createFastify(t, {
       adapter: FormidableAdapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      iterator: true
+      iterator: true,
     })
 
     const form = new FormData()

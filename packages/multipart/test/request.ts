@@ -2,7 +2,7 @@ import undici, { Agent, type FormData } from 'undici'
 
 const dispatcher = new Agent({
   keepAliveTimeout: 10,
-  keepAliveMaxTimeout: 10
+  keepAliveMaxTimeout: 10,
 })
 
 export async function request (
@@ -14,7 +14,7 @@ export async function request (
     method: 'POST',
     headers,
     body: formData,
-    dispatcher
+    dispatcher,
   })
 
   const responseBody = await response.body.text()
@@ -24,6 +24,6 @@ export async function request (
     body: responseBody,
     json () {
       return JSON.parse(responseBody)
-    }
+    },
   }
 }

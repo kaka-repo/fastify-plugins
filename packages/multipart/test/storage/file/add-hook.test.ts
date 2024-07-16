@@ -14,7 +14,7 @@ test('FileStorage - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     })
 
     const form = new FormData()
@@ -41,7 +41,7 @@ test('FileStorage - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     })
 
     const form = new FormData()
@@ -70,7 +70,7 @@ test('FileStorage - addHook', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     })
 
     const form = new FormData()

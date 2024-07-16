@@ -13,8 +13,8 @@ test('BusboyAdapter - error', async function (t) {
       adapter: BusboyAdapter,
       storage: Storage,
       limits: {
-        fields: 0
-      }
+        fields: 0,
+      },
     })
 
     const form = new FormData()
@@ -34,8 +34,8 @@ test('BusboyAdapter - error', async function (t) {
       adapter: BusboyAdapter,
       storage: Storage,
       limits: {
-        fieldSize: 0
-      }
+        fieldSize: 0,
+      },
     })
 
     const form = new FormData()
@@ -55,8 +55,8 @@ test('BusboyAdapter - error', async function (t) {
       adapter: BusboyAdapter,
       storage: Storage,
       limits: {
-        files: 0
-      }
+        files: 0,
+      },
     })
 
     const form = new FormData()
@@ -76,8 +76,8 @@ test('BusboyAdapter - error', async function (t) {
       adapter: BusboyAdapter,
       storage: Storage,
       limits: {
-        fileSize: 0
-      }
+        fileSize: 0,
+      },
     })
 
     const form = new FormData()
@@ -97,8 +97,8 @@ test('BusboyAdapter - error', async function (t) {
       adapter: BusboyAdapter,
       storage: Storage,
       limits: {
-        parts: 0
-      }
+        parts: 0,
+      },
     })
 
     const form = new FormData()
@@ -118,8 +118,8 @@ test('BusboyAdapter - error', async function (t) {
       adapter: BusboyAdapter,
       storage: Storage,
       limits: {
-        fileSize: 0
-      }
+        fileSize: 0,
+      },
     })
 
     const form = new FormData()

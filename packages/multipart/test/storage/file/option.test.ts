@@ -21,7 +21,7 @@ test('FileStorage - addContentTypeParser', async function (t) {
       storageOption: { uploadDir },
       addContentTypeParser: true,
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     })
 
     const form = new FormData()
@@ -58,7 +58,7 @@ test('FileStorage - addContentTypeParser', async function (t) {
       storageOption: { uploadDir },
       addContentTypeParser: true,
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     })
 
     const form = new FormData()
@@ -97,7 +97,7 @@ test('FileStorage - addContentTypeParser', async function (t) {
       storageOption: { uploadDir },
       addContentTypeParser: true,
       adapter: BusboyAdapter,
-      storage: FileStorage
+      storage: FileStorage,
     })
 
     const form = new FormData()

@@ -10,9 +10,9 @@ test('Adapter', async function (t) {
   t.test('parsed - iterate do nothing', async function (t) {
     const fastify = await createFastify(t, {
       adapter: Adapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      iterator: true
+      iterator: true,
     })
 
     const form = new FormData()
@@ -33,12 +33,11 @@ test('Adapter', async function (t) {
   t.test('json - iterate do nothing', async function (t) {
     const fastify = await createFastify(t, {
       adapter: Adapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      iterator: true
+      iterator: true,
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const response = await request(fastify.listeningOrigin, JSON.stringify({ hello: 'world' }) as any, { 'Content-Type': 'application/json' })
     t.equal(response.status, 200)
 
@@ -53,12 +52,11 @@ test('Adapter', async function (t) {
   t.test('json - parseMultipart do nothing', async function (t) {
     const fastify = await createFastify(t, {
       adapter: Adapter,
-      storage: Storage
+      storage: Storage,
     }, {
-      inline: true
+      inline: true,
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const response = await request(fastify.listeningOrigin, JSON.stringify({ hello: 'world' }) as any, { 'Content-Type': 'application/json' })
     t.equal(response.status, 200)
 
@@ -74,10 +72,9 @@ test('Adapter', async function (t) {
     const fastify = await createFastify(t, {
       addHook: true,
       adapter: Adapter,
-      storage: Storage
+      storage: Storage,
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const response = await request(fastify.listeningOrigin, JSON.stringify({ hello: 'world' }) as any, { 'Content-Type': 'application/json' })
     t.equal(response.status, 200)
 

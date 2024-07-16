@@ -16,7 +16,7 @@ export class BusboyAdapter extends Adapter {
     this.name = 'BusboyAdapter'
     this.#busboy = Busboy({
       headers: request.raw.headers,
-      limits: option.limits
+      limits: option.limits,
     })
     this.#removeFromBody = option.removeFilesFromBody ?? false
     this.#storage = request[kStorage]
@@ -126,7 +126,7 @@ export class BusboyAdapter extends Adapter {
           const done = (ended && stack.length === 0)
           return {
             value: stack.shift(),
-            done
+            done,
           }
         }
       },
@@ -137,7 +137,7 @@ export class BusboyAdapter extends Adapter {
         onDone()
         return {
           value: undefined,
-          done: true
+          done: true,
         }
       },
       // not able to test but good to have
@@ -147,12 +147,12 @@ export class BusboyAdapter extends Adapter {
         onDone()
         return {
           value: undefined,
-          done: true
+          done: true,
         }
       },
       [Symbol.asyncIterator] () {
         return this
-      }
+      },
     }
   }
 }

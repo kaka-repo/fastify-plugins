@@ -58,7 +58,7 @@ export class Adapter {
       /* c8 ignore next 3 */
       [Symbol.asyncIterator] () {
         return this
-      }
+      },
     }
   }
 

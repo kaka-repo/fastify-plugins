@@ -10,9 +10,9 @@ test('BufferStorage - parseMultipart', async function (t) {
   t.test('single file', async function (t) {
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: BufferStorage
+      storage: BufferStorage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -32,9 +32,9 @@ test('BufferStorage - parseMultipart', async function (t) {
   t.test('multiple fields', async function (t) {
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: BufferStorage
+      storage: BufferStorage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -56,9 +56,9 @@ test('BufferStorage - parseMultipart', async function (t) {
   t.test('multiple files', async function (t) {
     const fastify = await createFastify(t, {
       adapter: BusboyAdapter,
-      storage: BufferStorage
+      storage: BufferStorage,
     }, {
-      inline: true
+      inline: true,
     })
 
     const form = new FormData()
@@ -76,12 +76,12 @@ test('BufferStorage - parseMultipart', async function (t) {
     t.deepEqual(json.body.file, [
       { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) },
       { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworld').map(Number)) },
-      { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworldhelloworld').map(Number)) }
+      { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworldhelloworld').map(Number)) },
     ])
     t.deepEqual(json.files.file, [
       { name: 'hello_world1.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworld').map(Number)) } },
       { name: 'hello_world2.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworld').map(Number)) } },
-      { name: 'hello_world3.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworldhelloworld').map(Number)) } }
+      { name: 'hello_world3.txt', value: { type: 'Buffer', data: Array.from(Buffer.from('helloworldhelloworldhelloworld').map(Number)) } },
     ])
   })
 })

@@ -39,11 +39,10 @@ const plugin: FastifyPluginAsync<FastifyOAuthOption> = async function (fastify, 
     stateGenerator ??= defaultStateGenerator
 
     fastify.get(option.startRedirectPath, async function (request, reply) {
-      // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
       const state = await (stateGenerator as StateGenerator)(request)
       const authorizeURL = option.provider.authorizeURL(request, {
         ...startRedirectPathOption,
-        state
+        state,
       })
       return await reply.redirect(authorizeURL)
     })
@@ -53,6 +52,6 @@ const plugin: FastifyPluginAsync<FastifyOAuthOption> = async function (fastify, 
 export const FastifyOAuth2 = FastifyPlugin(plugin, {
   fastify: '4.x',
   name: '@kakang/fastify-oauth2',
-  dependencies: []
+  dependencies: [],
 })
 export default FastifyOAuth2
