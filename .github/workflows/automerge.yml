@@ -60,9 +60,9 @@ jobs:
       contents: read
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [20, 22]
         os: [ubuntu-latest]
-        mongodb: [5, 6]
+        mongodb: ['6.0', '7.0', '8.0']
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
