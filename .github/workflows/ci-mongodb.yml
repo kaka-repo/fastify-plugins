@@ -53,14 +53,15 @@ jobs:
 
   test:
     name: Test
+    needs: linter
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [20, 22]
         os: [ubuntu-latest]
-        mongodb: [5, 6]
+        mongodb: ['6.0', '7.0']
 
     steps:
       - name: Check out repo
