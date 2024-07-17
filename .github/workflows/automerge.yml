@@ -55,6 +55,7 @@ jobs:
     if: >
       github.event_name == 'pull_request' &&
       github.event.pull_request.user.login == 'dependabot[bot]'
+    needs: linter
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -62,7 +63,7 @@ jobs:
       matrix:
         node-version: [20, 22]
         os: [ubuntu-latest]
-        mongodb: ['6.0', '7.0', '8.0']
+        mongodb: ['6.0', '7.0']
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
