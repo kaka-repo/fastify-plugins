@@ -65,6 +65,12 @@ fastify.post('/', async function(request, reply) {
     }
   }
 
+  // you can use FormData if you familiar with Web API
+  for await (const [name, value] of await request.formData()) {
+    console.log(name, value)
+  }
+
+
   // access files
   request.files
 

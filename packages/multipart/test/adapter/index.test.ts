@@ -85,4 +85,23 @@ test('Adapter', async function (t) {
     t.equal(typeof json.body?.file, 'undefined')
     t.equal(typeof json.files?.file, 'undefined')
   })
+
+  t.test('json - formData do nothing', async function (t) {
+    const fastify = await createFastify(t, {
+      adapter: Adapter,
+      storage: Storage,
+    }, {
+      formData: true,
+    })
+
+    const response = await request(fastify.listeningOrigin, JSON.stringify({ hello: 'world' }) as any, { 'Content-Type': 'application/json' })
+    t.equal(response.status, 200)
+
+    const json = await response.json()
+
+    // raw adapter do nothing
+    t.equal(typeof json.body?.hello, 'undefined')
+    t.equal(typeof json.body?.file, 'undefined')
+    t.equal(typeof json.files?.file, 'undefined')
+  })
 })
