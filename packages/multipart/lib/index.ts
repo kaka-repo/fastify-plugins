@@ -1,5 +1,6 @@
 import { type FastifyPluginAsync, type FastifyRequest } from 'fastify'
 import FastifyPlugin from 'fastify-plugin'
+import { blob } from 'node:stream/consumers'
 import { type Adapter, type AdapterIteratorResult, type Files } from './adapter/adapter'
 import { FST_MP_CONFLICT_CONFIG, FST_MP_INVALID_OPTION } from './error'
 import { type Storage } from './storage/storage'
@@ -14,6 +15,7 @@ declare module 'fastify' {
     [kIsMultipartParsed]: boolean
     parseMultipart: <Payload = any>(this: FastifyRequest) => Promise<Payload>
     multipart: (this: FastifyRequest) => AsyncIterableIterator<AdapterIteratorResult>
+    formData: (this: FastifyRequest) => Promise<FormData>
   }
 }
 
@@ -160,6 +162,35 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
         return this
       },
     }
+  })
+  fastify.decorateRequest('formData', async function (this: FastifyRequest): Promise<FormData> {
+    const request = this
+    const formData = new FormData()
+
+    // skip if not multipart
+    if (!request[kIsMultipart]) {
+      return formData
+    }
+    // skip if already parsed
+    if (request[kIsMultipartParsed]) {
+      request.log.warn('multipart already parsed, you probably need to check your code why it is parsed twice.')
+      return formData
+    }
+
+    for await (const { type, name, value, info } of request.multipart()) {
+      switch (type) {
+        case 'field': {
+          formData.append(name, value)
+          break
+        }
+        case 'file': {
+          formData.append(name, await blob(value), info.filename)
+          break
+        }
+      }
+    }
+
+    return formData
   })
 
   const { adapter: Adapter, storage: Storage } = option
