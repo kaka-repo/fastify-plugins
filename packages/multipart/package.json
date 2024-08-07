@@ -85,7 +85,7 @@
   "author": "KaKa <kaka@kakang.dev>",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@kakang/unit": "^0.0.2",
+    "@kakang/unit": "^0.0.3",
     "@types/busboy": "^1.5.4",
     "@types/formidable": "^3.4.5",
     "@types/node": "^22.1.0",
