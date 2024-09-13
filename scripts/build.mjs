@@ -11,17 +11,20 @@ const { values } = parseArgs({
   }
 })
 
-function isBuildAsset (name) {
+function isBuildAsset(name) {
   return String(name).endsWith('.js') ||
-  String(name).endsWith('.cjs') ||
-  String(name).endsWith('.mjs') ||
-  String(name).endsWith('.map') ||
-  String(name).endsWith('.d.ts') ||
-  String(name).endsWith('.d.cts') ||
-  String(name).endsWith('.d.mts')
+    String(name).endsWith('.cjs') ||
+    String(name).endsWith('.mjs') ||
+    String(name).endsWith('.map') ||
+    String(name).endsWith('.d.ts') ||
+    String(name).endsWith('.d.cts') ||
+    String(name).endsWith('.d.mts')
 }
 
-async function clean () {
+async function clean() {
+  // remove ESM folder
+  await fs.rm(path.resolve('lib', 'mjs'), { recursive: true, force: true })
+
   for (const file of await fs.readdir(path.resolve('lib'), { recursive: true })) {
     if (isBuildAsset(file)) {
       await fs.rm(path.resolve('lib', file), { force: true })
@@ -35,25 +38,17 @@ async function clean () {
   }
 }
 
-async function build (mode = 'all') {
+async function build(mode = 'all') {
   if (mode === 'all' || mode === 'cjs') {
     console.log('build cjs - start')
     execSync('tsc -p tsconfig.cjs.json', { stdio: 'pipe' })
-    // for (const file of await fs.readdir(path.resolve('lib'), { recursive: true })) {
-    //   if (isBuildAsset(file)) {
-    //     await fs.rename(path.resolve('lib', file), path.resolve('lib', file).replace('.js', '.cjs').replace('.d.ts', '.d.cts'))
-    //   }
-    // }
     console.log('build cjs - end')
   }
   if (mode === 'all' || mode === 'mjs') {
     console.log('build mjs - start')
+    await fs.mkdir(path.resolve('lib', 'mjs'), { recursive: true })
+    await fs.writeFile(path.resolve('lib', 'mjs', 'package.json'), JSON.stringify({ type: 'module' }, null, 2))
     execSync('tsc -p tsconfig.mjs.json', { stdio: 'pipe' })
-    // for (const file of await fs.readdir(path.resolve('lib'), { recursive: true })) {
-    //   if (isBuildAsset(file)) {
-    //     await fs.rename(path.resolve('lib', file), path.resolve('lib', file).replace('.js', '.mjs').replace('.d.ts', '.d.mts'))
-    //   }
-    // }
     execSync('tsc-alias -p tsconfig.mjs.json', { stdio: 'pipe' })
     console.log('build mjs - end')
   }
