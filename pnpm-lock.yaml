@@ -250,8 +250,11 @@ importers:
   packages/static:
     dependencies:
       '@kakang/abstract-send':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.0.4
+        version: 0.0.4
+      '@types/fast-decode-uri-component':
+        specifier: ^1.0.0
+        version: 1.0.0
       fastify-plugin:
         specifier: ^4.5.1
         version: 4.5.1
@@ -395,8 +398,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@kakang/abstract-send@0.0.1':
-    resolution: {integrity: sha512-wNrPJcOEM/ryxKi6oCp3M+PcdTffe7M6tzdreFBquXebeHbpP8eSld+sHngFBbu306N/L5OJeCAnRsQ159l8JQ==}
+  '@kakang/abstract-send@0.0.4':
+    resolution: {integrity: sha512-9PMgILqoWhwSojzEjUtG2lXk3vPs8wb+5xW+i/hnYhA848qGeNvky4fYLZ6lR2X8hgQqY+ZiQTXfDlmSes5fSQ==}
 
   '@kakang/unit@0.0.3':
     resolution: {integrity: sha512-LqATj9rB8z5wLicrKorUe5sZXitOquT9wxlsDdE/J0xwZUEDXIlAwh1yu0B3akLnc/Lmm98TFGX8Oq10JnOqiA==}
@@ -483,6 +486,9 @@ packages:
 
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+
+  '@types/fast-decode-uri-component@1.0.0':
+    resolution: {integrity: sha512-xhTFpMookjiVEDxI8RBUOxZL8BQiI2+YZZoqzW/G6s3r1h60gDzGnmKP83LNuTmCqk8ZmbY5cYkByKu4t+rKhA==}
 
   '@types/formidable@3.4.5':
     resolution: {integrity: sha512-s7YPsNVfnsng5L8sKnG/Gbb2tiwwJTY1conOkJzTMRvJAlLFW1nEua+ADsJQu8N1c0oTHx9+d5nqg10WuT9gHQ==}
@@ -2153,7 +2159,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  '@kakang/abstract-send@0.0.1':
+  '@kakang/abstract-send@0.0.4':
     dependencies:
       '@lukeed/ms': 2.0.2
       escape-html: 1.0.3
@@ -2257,6 +2263,8 @@ snapshots:
       '@types/json-schema': 7.0.15
 
   '@types/estree@1.0.5': {}
+
+  '@types/fast-decode-uri-component@1.0.0': {}
 
   '@types/formidable@3.4.5':
     dependencies:

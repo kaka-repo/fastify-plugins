@@ -1,5 +1,4 @@
-import { send } from '@kakang/abstract-send'
-import { SendOptions } from '@kakang/abstract-send/lib/options'
+import { send, SendOptions } from '@kakang/abstract-send'
 import { FastifyReply, FastifyRequest, type FastifyPluginAsync } from 'fastify'
 import FastifyPlugin from 'fastify-plugin'
 import { normalizeRoots, normalizeSendOption, normalizeServe } from './option'
