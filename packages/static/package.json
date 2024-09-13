@@ -1,0 +1,57 @@
+{
+  "name": "@kakang/fastify-static",
+  "version": "0.0.0",
+  "description": "Fastify plugin for content serving",
+  "keywords": [
+    "fastify",
+    "kakang"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/mjs/index.js",
+      "require": "./lib/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "node ../../scripts/build.mjs --clean",
+    "lint": "eslint",
+    "lint:fix": "npm run lint -- --fix",
+    "build": "node ../../scripts/build.mjs --build=\"all\"",
+    "build:cjs": "node ../../scripts/build.mjs --build='cjs'",
+    "build:mjs": "node ../../scripts/build.mjs --build='mjs'",
+    "unit": "cross-env \"NODE_OPTIONS=--require ts-node/register\" unit",
+    "test": "npm run lint && npm run unit",
+    "coverage": "cross-env \"NODE_OPTIONS=--require ts-node/register\" c8 unit",
+    "prepublishOnly": "npm run build",
+    "postpublish": "npm run clean"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaka-ng/fastify-plugins.git"
+  },
+  "author": "KaKa <kaka@kakang.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "@kakang/unit": "^0.0.3",
+    "@types/node": "^22.5.4",
+    "c8": "^10.1.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.10.0",
+    "fastify": "^4.28.1",
+    "neostandard": "^0.11.4",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@kakang/abstract-send": "^0.0.1",
+    "fastify-plugin": "^4.5.1"
+  }
+}
