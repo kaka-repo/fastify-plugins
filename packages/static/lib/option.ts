@@ -1,4 +1,4 @@
-import { SendOptions } from '@kakang/abstract-send/lib/options'
+import { SendOptions } from '@kakang/abstract-send'
 import { FastifyStaticOption } from '.'
 
 export function validateRootOption (root?: unknown) {

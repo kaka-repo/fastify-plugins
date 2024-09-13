@@ -12,6 +12,8 @@ const { values } = parseArgs({
 })
 
 function isBuildAsset(name) {
+  // we should exclude fixtures
+  if (String(name).includes('fixtures')) return false
   return String(name).endsWith('.js') ||
     String(name).endsWith('.cjs') ||
     String(name).endsWith('.mjs') ||
