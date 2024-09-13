@@ -60,7 +60,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^9.10.0",
     "fastify": "^4.28.1",
-    "mongodb": "^6.8.1",
+    "mongodb": "^6.9.0",
     "neostandard": "^0.11.4",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
@@ -72,7 +72,7 @@
     "fastify-plugin": "^4.5.1"
   },
   "peerDependencies": {
-    "mongodb": "^6.8.1"
+    "mongodb": "^6.9.0"
   },
   "peerDependenciesMeta": {
     "mongodb": {
