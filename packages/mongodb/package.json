@@ -42,7 +42,7 @@
     "@types/node": "^22.5.5",
     "c8": "^10.1.2",
     "cross-env": "^7.0.3",
-    "eslint": "^9.10.0",
+    "eslint": "^9.11.0",
     "fastify": "^4.28.1",
     "mongodb": "^6.9.0",
     "neostandard": "^0.11.5",
