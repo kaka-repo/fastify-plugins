@@ -103,7 +103,7 @@
     "undici": "^6.19.8"
   },
   "dependencies": {
-    "fastify-plugin": "^5.0.0"
+    "fastify-plugin": "^5.0.1"
   },
   "peerDependencies": {
     "@types/busboy": "^1.5.0",

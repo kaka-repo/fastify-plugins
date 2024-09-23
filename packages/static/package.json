@@ -53,6 +53,6 @@
   "dependencies": {
     "@kakang/abstract-send": "^0.0.4",
     "@types/fast-decode-uri-component": "^1.0.0",
-    "fastify-plugin": "^5.0.0"
+    "fastify-plugin": "^5.0.1"
   }
 }
