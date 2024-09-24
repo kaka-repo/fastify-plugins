@@ -61,7 +61,7 @@
     "eslint": "^9.11.1",
     "fastify": "^4.28.1",
     "mongodb": "^6.9.0",
-    "neostandard": "^0.11.5",
+    "neostandard": "^0.11.6",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
