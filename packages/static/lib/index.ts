@@ -118,7 +118,7 @@ const plugin: FastifyPluginAsync<FastifyStaticOption> = async function (fastify,
 }
 
 export const FastifyStatic = FastifyPlugin(plugin, {
-  fastify: '4.x',
+  fastify: '5.x',
   name: '@kakang/fastify-static',
   decorators: {
     fastify: [],

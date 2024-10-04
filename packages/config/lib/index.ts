@@ -10,7 +10,7 @@ export function build <T = EnvSchemaData> (options: EnvSchemaOpt<T>): { env: T, 
     done()
   }
   FastifyPlugin(plugin, {
-    fastify: '4.x',
+    fastify: '5.x',
     name: '@kakang/fastify-config',
     decorators: {
       fastify: [],

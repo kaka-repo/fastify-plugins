@@ -271,7 +271,7 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
 }
 
 export const FastifyMultipart = FastifyPlugin(plugin, {
-  fastify: '4.x',
+  fastify: '5.x',
   name: '@kakang/fastify-multipart',
   dependencies: [],
 })

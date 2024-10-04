@@ -41,7 +41,7 @@ const plugin: FastifyPluginAsync<FastifyCronJobOption> = async function (fastify
 }
 
 export const fastifyCronJob = FastifyPlugin(plugin, {
-  fastify: '4.x',
+  fastify: '5.x',
   name: '@kakang/fastify-cronjob',
   decorators: {
     fastify: [],
