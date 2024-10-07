@@ -8,7 +8,7 @@ import { request } from './request'
 
 test('multipart already parsed', async function (t) {
   t.test('addHook', async function (t) {
-    const fastify = Fastify(fastifyOptions)
+    const fastify = Fastify({ ...fastifyOptions })
 
     t.after(async function () {
       await fastify.close()
@@ -57,7 +57,7 @@ test('multipart already parsed', async function (t) {
   })
 
   t.test('parseMultipart', async function (t) {
-    const fastify = Fastify(fastifyOptions)
+    const fastify = Fastify({ ...fastifyOptions })
 
     t.after(async function () {
       await fastify.close()
@@ -104,7 +104,7 @@ test('multipart already parsed', async function (t) {
 
   t.test('multipart', async function (t) {
     const ok: typeof t.ok = t.ok
-    const fastify = Fastify(fastifyOptions)
+    const fastify = Fastify({ ...fastifyOptions })
 
     t.after(async function () {
       await fastify.close()
@@ -154,7 +154,7 @@ test('multipart already parsed', async function (t) {
 
   t.test('formData', async function (t) {
     const ok: typeof t.ok = t.ok
-    const fastify = Fastify(fastifyOptions)
+    const fastify = Fastify({ ...fastifyOptions })
 
     t.after(async function () {
       await fastify.close()

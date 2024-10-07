@@ -61,8 +61,8 @@ const plugin: FastifyPluginAsync<FastifyMultipartOption> = async function (fasti
     throw FST_MP_CONFLICT_CONFIG()
   }
 
-  fastify.decorateRequest(kAdapter, null)
-  fastify.decorateRequest(kStorage, null)
+  fastify.decorateRequest(kAdapter)
+  fastify.decorateRequest(kStorage)
   fastify.decorateRequest(kIsMultipart, false)
   fastify.decorateRequest(kIsMultipartParsed, false)
   fastify.decorateRequest('files', null)
