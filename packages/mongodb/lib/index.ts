@@ -62,7 +62,7 @@ const plugin: FastifyPluginAsync<fastifyMongoDBOption> = async function (fastify
 }
 
 export const fastifyMongoDB = FastifyPlugin(plugin, {
-  fastify: '4.x',
+  fastify: '5.x',
   name: '@kakang/fastify-mongodb',
   decorators: {
     fastify: [],

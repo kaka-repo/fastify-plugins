@@ -15,7 +15,7 @@ export async function createFastify (t: TestContext, options?: FastifyMultipartO
   const inline = parseMode.inline ?? false
   const iterator = parseMode.iterator ?? false
   const formData = parseMode.formData ?? false
-  const fastify = Fastify(fastifyOptions)
+  const fastify = Fastify({ ...fastifyOptions })
 
   await fastify.register(FastifyMultipart, options)
 
