@@ -1,9 +1,19 @@
-import { send, SendOptions } from '@kakang/abstract-send'
+import { SendOptions } from '@kakang/abstract-send'
 import { FastifyReply, FastifyRequest, type FastifyPluginAsync } from 'fastify'
 import FastifyPlugin from 'fastify-plugin'
+import { resolve } from 'node:path'
+import { Readable } from 'node:stream'
+import { Engine } from './engines/engine'
+import { FileSystemEngine } from './engines/fs'
 import { normalizeRoots, normalizeSendOption, normalizeServe } from './option'
 
 declare module 'fastify' {
+  interface FastifyInstance {
+    static: {
+      upload: (path: string, readable: Readable) => Promise<void>
+    }
+  }
+
   interface FastifyReply {
     sendFile: (this: FastifyReply, path: string, options?: Partial<FastifyStaticOption>) => Promise<void>
     download: (this: FastifyReply, path: string, filename: string, options?: Partial<FastifyStaticOption>) => Promise<void>
@@ -11,29 +21,43 @@ declare module 'fastify' {
 }
 
 // send options
-export interface FastifyStaticOption extends Omit<SendOptions, 'root' | 'start' | 'end'> {
+export interface FastifyStaticOption extends Omit<SendOptions, 'root' | 'start' | 'end' | 'engine'> {
   root: string | string[]
+  // engine
+  engine?: Engine
   // allows to provide fallback
   handleNotFound?: (request: FastifyRequest, reply: FastifyReply) => void | Promise<void>
-
   // serve
   serve?: boolean | string
 }
 
 const plugin: FastifyPluginAsync<FastifyStaticOption> = async function (fastify, options) {
-  const globalRoots = normalizeRoots(options.root)
-  const globalSendOptions: Omit<SendOptions, 'root'> = normalizeSendOption(options)
-  const globalHandleNotFound = options.handleNotFound
+  const globals = {
+    roots: normalizeRoots(options.root),
+    engine: options.engine != null ? options.engine : new FileSystemEngine(),
+    options: normalizeSendOption(options),
+    handleNotFound: options.handleNotFound
+  }
   const serveURL = normalizeServe(options.serve)
 
-  fastify.decorateReply('sendFile', async function sendFile (path: string, options?: Partial<FastifyStaticOption>) {
-    const roots = options?.root != null ? normalizeRoots(options.root) : globalRoots
-    const sendOptions = { ...globalSendOptions, ...normalizeSendOption(options) }
-    const handleNotFound = typeof options?.handleNotFound === 'function' ? options?.handleNotFound : globalHandleNotFound
+  fastify.decorate('static', {
+    upload: async function upload (path: string, readable: Readable) {
+      const filepath = resolve(globals.roots[0], path)
+      await globals.engine.upload(filepath, readable)
+    }
+  })
 
-    for (let i = 0; i < roots.length; i++) {
-      const root = roots[i]
-      const { statusCode, headers, stream, type } = await send(this.request.raw, path, { ...sendOptions, root })
+  fastify.decorateReply('sendFile', async function sendFile (path: string, options?: Partial<FastifyStaticOption>) {
+    const scoped = {
+      roots: options?.root != null ? normalizeRoots(options.root) : globals.roots,
+      engine: options?.engine != null ? options.engine : globals.engine,
+      options: { ...globals.options, ...normalizeSendOption(options) },
+      handleNotFound: typeof options?.handleNotFound === 'function' ? options.handleNotFound : globals.handleNotFound
+    }
+
+    for (let i = 0; i < scoped.roots.length; i++) {
+      const root = scoped.roots[i]
+      const { statusCode, headers, stream, type } = await scoped.engine.download(this.request.raw, path, { ...scoped.options, root })
       switch (type) {
         case 'file':
         case 'directory': {
@@ -45,11 +69,11 @@ const plugin: FastifyPluginAsync<FastifyStaticOption> = async function (fastify,
         case 'error': {
           if (statusCode === 404) {
             // try next root path
-            if (i < roots.length - 1) continue
+            if (i < scoped.roots.length - 1) continue
             // allows custom not found
             // mostly used in spa
-            if (typeof handleNotFound === 'function') {
-              await handleNotFound(this.request, this)
+            if (typeof scoped.handleNotFound === 'function') {
+              await scoped.handleNotFound(this.request, this)
             } else {
               this.callNotFound()
             }
@@ -65,13 +89,16 @@ const plugin: FastifyPluginAsync<FastifyStaticOption> = async function (fastify,
   })
 
   fastify.decorateReply('download', async function download (path: string, filename: string, options?: Partial<FastifyStaticOption>) {
-    const roots = options?.root != null ? normalizeRoots(options.root) : globalRoots
-    const sendOptions = { ...globalSendOptions, ...normalizeSendOption(options) }
-    const handleNotFound = typeof options?.handleNotFound === 'function' ? options?.handleNotFound : globalHandleNotFound
+    const scoped = {
+      roots: options?.root != null ? normalizeRoots(options.root) : globals.roots,
+      engine: options?.engine != null ? options.engine : globals.engine,
+      options: { ...globals.options, ...normalizeSendOption(options) },
+      handleNotFound: typeof options?.handleNotFound === 'function' ? options.handleNotFound : globals.handleNotFound
+    }
 
-    for (let i = 0; i < roots.length; i++) {
-      const root = roots[i]
-      const { statusCode, headers, stream, type } = await send(this.request.raw, path, { ...sendOptions, root })
+    for (let i = 0; i < scoped.roots.length; i++) {
+      const root = scoped.roots[i]
+      const { statusCode, headers, stream, type } = await scoped.engine.download(this.request.raw, path, { ...scoped.options, root })
       switch (type) {
         case 'file':
         case 'directory': {
@@ -86,11 +113,11 @@ const plugin: FastifyPluginAsync<FastifyStaticOption> = async function (fastify,
         case 'error': {
           if (statusCode === 404) {
             // try next root path
-            if (i < roots.length - 1) continue
+            if (i < scoped.roots.length - 1) continue
             // allows custom not found
             // mostly used in spa
-            if (typeof handleNotFound === 'function') {
-              await handleNotFound(this.request, this)
+            if (typeof scoped.handleNotFound === 'function') {
+              await scoped.handleNotFound(this.request, this)
             } else {
               this.callNotFound()
             }
@@ -128,3 +155,7 @@ export const FastifyStatic = FastifyPlugin(plugin, {
   dependencies: [],
   encapsulate: false,
 })
+
+export { Engine } from './engines/engine'
+export { FileSystemEngine } from './engines/fs'
+export { MongoDBEngine } from './engines/mongodb'

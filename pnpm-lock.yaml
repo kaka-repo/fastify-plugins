@@ -250,8 +250,8 @@ importers:
   packages/static:
     dependencies:
       '@kakang/abstract-send':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: 0.0.5
       '@types/fast-decode-uri-component':
         specifier: ^1.0.0
         version: 1.0.0
@@ -271,12 +271,18 @@ importers:
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       eslint:
         specifier: ^9.12.0
         version: 9.12.0
       fastify:
         specifier: ^5.0.0
         version: 5.0.0
+      mongodb:
+        specifier: ^6.9.0
+        version: 6.9.0
       neostandard:
         specifier: ^0.11.6
         version: 0.11.6(eslint@9.12.0)(typescript@5.6.2)
@@ -410,8 +416,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@kakang/abstract-send@0.0.4':
-    resolution: {integrity: sha512-9PMgILqoWhwSojzEjUtG2lXk3vPs8wb+5xW+i/hnYhA848qGeNvky4fYLZ6lR2X8hgQqY+ZiQTXfDlmSes5fSQ==}
+  '@kakang/abstract-send@0.0.5':
+    resolution: {integrity: sha512-A4SPJ8MLxcJPN1VH3MQf1iXd2V0oDE6oalH1pSo6mj6dOSoYeraXfNO0LcO+3W3BB0Kkiv0TfllBl4O7Y50f/w==}
 
   '@kakang/unit@0.0.3':
     resolution: {integrity: sha512-LqATj9rB8z5wLicrKorUe5sZXitOquT9wxlsDdE/J0xwZUEDXIlAwh1yu0B3akLnc/Lmm98TFGX8Oq10JnOqiA==}
@@ -2122,7 +2128,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  '@kakang/abstract-send@0.0.4':
+  '@kakang/abstract-send@0.0.5':
     dependencies:
       '@lukeed/ms': 2.0.2
       escape-html: 1.0.3

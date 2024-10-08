@@ -60,7 +60,9 @@ jobs:
     strategy:
       matrix:
         node-version: [20, 22]
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
+        mongodb: ['6.0', '7.0']
+
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -71,6 +73,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.11.0
+        with:
+          mongodb-replica-set: rs0
+          mongodb-version: ${{ matrix.mongodb }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
