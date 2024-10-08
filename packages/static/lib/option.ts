@@ -33,7 +33,6 @@ export function normalizeSendOption (options?: Partial<FastifyStaticOption>): Se
     index: options?.index,
     lastModified: options?.lastModified,
     maxAge: options?.maxAge,
-    maxage: options?.maxage,
-    engine: options?.engine
+    maxage: options?.maxage
   }
 }

@@ -18,10 +18,29 @@ yarn add @kakang/fastify-static
 ## Usage
 
 ```ts
-import FastifyStatic from '@kakang/fastify-static'
+import FastifyStatic, {
+  FileSystemEngine
+} from '@kakang/fastify-static'
 
 fastify.register(FastifyStatic, {
+  serve: "/",
   root: "/",
-  serve: "/"
+  engine: new FileSystemEngine()
+})
+
+fastify.get("/download.txt", (_, reply) => {
+  // download file
+  return reply.download('download.txt', 'newname.txt')
+})
+
+fastify.get("/download.html", (_, reply) => {
+  // send file
+  return reply.sendFile('download.html')
+})
+
+fastify.post('/stream', (request, reply) => {
+  // write file
+  await fastify.static.upload('newfile.txt', request.body)
+  return reply.send({ ok: true })
 })
 ```
