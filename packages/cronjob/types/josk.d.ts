@@ -1,3 +1,5 @@
+import { Collection, Db } from 'mongodb'
+
 declare module 'josk' {
 
   interface ErrorDetails {
@@ -86,13 +88,20 @@ declare module 'josk' {
   }
 
   export interface MongoAdapterOptions {
-    db: unknown
+    db: Db
     lockCollectionName?: string
     prefix?: string
     resetOnInit?: boolean
   }
 
   export class MongoAdapter {
+    db: Db
+    prefix: string
+    uniqueName: string
+    lockCollectionName: string
+    collection: Collection
+    lockCollection: Collection
+
     constructor (options: MongoAdapterOptions)
 
     async ping (): Promise<void>

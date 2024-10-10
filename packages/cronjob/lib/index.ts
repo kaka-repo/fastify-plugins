@@ -35,4 +35,4 @@ export const fastifyCronJob = FastifyPlugin(plugin, {
   encapsulate: false,
 })
 
-export { MongoAdapter, RedisAdapter } from 'josk'
+export { MongoAdapter, RedisAdapter } from './cronjob'

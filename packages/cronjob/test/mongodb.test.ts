@@ -14,7 +14,8 @@ test('MongoAdapter', async function (t: TestContext) {
 
   await fastify.register(fastifyCronJob, {
     adapter: new MongoAdapter({
-      db
+      db,
+      collectionName: 'sys.timer'
     })
   })
 
