@@ -14,12 +14,12 @@ export interface FastifyCronJobOption extends JoSkOptions {
 }
 
 const plugin: FastifyPluginAsync<FastifyCronJobOption> = async function (fastify, option) {
-  const josk = new CronJob(option)
+  const cronjob = new CronJob(option)
 
-  fastify.decorate('cronjob', josk)
+  fastify.decorate('cronjob', cronjob)
 
   fastify.addHook('onClose', () => {
-    josk.destroy()
+    cronjob.destroy()
   })
 }
 
