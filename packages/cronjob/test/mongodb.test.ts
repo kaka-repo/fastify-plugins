@@ -44,7 +44,7 @@ test('loop', async function (t: TestContext) {
   const loopTick: Date[] = []
   const loop = await fastify.cronjob.setLoopTask(async () => {
     loopTick.push(new Date())
-    await setTimeout(1000)
+    await setTimeout(2000)
   }, '1s')
   await setTimeout(5000)
   fastify.cronjob.clearTimeout(loop)
