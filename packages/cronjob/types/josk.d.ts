@@ -64,7 +64,7 @@ declare module 'josk' {
     async __execute (task: AsyncTaskFunc | SyncTaskFunc): Promise<boolean | undefined>
     async __iterate (): Promise<void>
     __tick (): void
-    __errorHandler (error: Error, title: string, description: string, uid: string): void
+    __errorHandler (error: Error | unknown, title: string, description: string, uid?: string): void
   }
 
   export interface RedisAdapterOptions {
