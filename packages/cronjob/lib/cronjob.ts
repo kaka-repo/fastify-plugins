@@ -1,335 +1,399 @@
 import { parseExpression } from 'cron-parser'
-import EventEmitter from 'events'
-import { type Adapter } from './adapter/adapter'
+import {
+  JoSk,
+  MongoAdapterOptions as JoSkMongoAdapterOptions,
+  RedisAdapter
+} from 'josk'
+import { Collection, Db } from 'mongodb'
 
-type _TaskExecutor = () => Promise<void>
-export type TaskExecutor<Context = unknown> = (context: Context) => Promise<void>
-
-export interface Task {
-  uid: string
-  once: boolean
-  delay: number
-  executeAt: number
-  isDeleted: boolean
-}
-
-export interface CreateTask {
-  uid: string
-  once?: boolean
-  delay: number
-}
-
-export interface CronJobOptions {
-  application: string
-  adapter: Adapter
-  context?: unknown
-
-  minTickMS?: number
-  maxTickMS?: number
-  maxExecutionMS?: number
-}
-
-export class CronJob<RootContext = unknown> extends EventEmitter {
-  // state
-  application: string
-  #tasks: Record<string, _TaskExecutor>
-  #deleted: Record<string, boolean>
-  nextTick: null | NodeJS.Timeout
-  isDestroyed: boolean
-  isLocked: boolean
-  adapter: Adapter
-  readonly #context: RootContext
-
-  // timing options
-  minTickMS: number
-  maxTickMS: number
-  maxExecutionMS: number
-
-  constructor (options: CronJobOptions) {
-    super()
-    this.application = options.application
-    this.#tasks = {}
-    this.#deleted = {}
-    this.nextTick = null
-    this.isDestroyed = false
-    this.isLocked = false
-    this.adapter = options.adapter
-    this.#context = options.context as any
-
-    this.minTickMS = options?.minTickMS ?? 128
-    this.maxTickMS = options?.maxTickMS ?? 768
-    this.maxExecutionMS = options?.maxExecutionMS ?? 900_000
-    this.#tick()
-  }
-
-  async setInterval<Context = RootContext>(
-    executor: TaskExecutor<Context>,
-    ms: number,
-    uid: string,
-    context?: Context
-  ): Promise<string> {
-    if (this.isDestroyed) return ''
-    // we need to prefix uid
-    !uid.startsWith('interval-') && (uid = `interval-${uid}`)
-    this.#tasks[uid] = async () => {
-      try {
-        await executor((context ?? this.#context) as Context)
-      } catch (err) {
-        this.emit('error', err)
-      }
-    }
-    await this.adapter.createTask({
-      uid,
-      once: false,
-      delay: ms,
-    })
-    return uid
-  }
-
-  async setTimeout<Context = RootContext>(
-    executor: TaskExecutor<Context>,
-    ms: number,
-    uid: string,
-    context?: Context
-  ): Promise<string> {
-    if (this.isDestroyed) return ''
-    // we need to prefix uid
-    !uid.startsWith('timeout-') && (uid = `timeout-${uid}`)
-    this.#tasks[uid] = async () => {
-      try {
-        await executor((context ?? this.#context) as Context)
-      } catch (err) {
-        this.emit('error', err)
-      }
-    }
-    await this.adapter.createTask({
-      uid,
-      once: true,
-      delay: ms,
-    })
-    return uid
-  }
-
-  async setImmediate<Context = RootContext>(
-    executor: TaskExecutor<Context>,
-    uid: string,
-    context?: Context
-  ): Promise<string> {
-    if (this.isDestroyed) return ''
-    // we need to prefix uid
-    !uid.startsWith('immediate-') && (uid = `immediate-${uid}`)
-    this.#tasks[uid] = async () => {
-      try {
-        await executor((context ?? this.#context) as Context)
-      } catch (err) {
-        this.emit('error', err)
-      }
-    }
-    await this.adapter.createTask({
-      uid,
-      once: true,
-      delay: 0,
-    })
-    return uid
-  }
-
-  async setCronJob<Context = RootContext>(
-    executor: TaskExecutor<Context>,
-    cron: string,
-    uid: string,
-    context?: Context
-  ): Promise<string> {
-    return await this.#setCronJob(executor, cron, uid, true, context)
-  }
-
-  async #setCronJob<Context = RootContext>(
-    executor: TaskExecutor<Context>,
-    cron: string,
-    uid: string,
-    fresh: boolean,
-    context?: Context
-  ): Promise<string> {
-    const nextExecuteAt = Number(parseExpression(cron).next().toDate())
-    const ms = nextExecuteAt - Date.now()
-    const _uid = `timeout-cron-${uid}`
-    if (fresh) this.#deleted[_uid] = false
-    if (this.#deleted[_uid]) return ''
-
-    return await this.setTimeout(async (context) => {
-      if (this.#deleted[_uid]) return
-      setImmediate(() => {
-        // we execute immediately for the next task
-        Promise.race([
-          executor(context),
-          this.#setCronJob(executor, cron, uid, false, context),
-        ]).catch((err) => {
-          this.emit('error', err)
-        })
-      })
-    }, ms, _uid, context)
-  }
-
-  async setLoopTask<Context = RootContext>(
-    executor: TaskExecutor<Context>,
-    uid: string,
-    context?: Context
-  ): Promise<string> {
-    return await this.#setLoopTask(executor, uid, true, context)
-  }
-
-  async #setLoopTask<Context = RootContext>(
-    executor: TaskExecutor<Context>,
-    uid: string,
-    fresh: boolean,
-    context?: Context
-  ): Promise<string> {
-    const _uid = `immediate-loop-${uid}`
-    if (fresh) this.#deleted[_uid] = false
-    if (this.#deleted[_uid]) return ''
-    return await this.setImmediate(async (context) => {
-      if (this.#deleted[_uid]) return
-      try {
-        await executor(context)
-      } finally {
-        await this.#setLoopTask(executor, uid, false, context)
-      }
-    }, _uid, context)
-  }
-
-  clearInterval (uid: string): void {
-    this.#deleted[uid] = true
-    this.#deleteTask(uid)
-  }
-
-  clearTimeout (uid: string): void {
-    this.clearInterval(uid)
-  }
-
-  async #_deleteTask (uid: string): Promise<void> {
-    const task = await this.adapter.updateTask(uid, Date.now() + this.maxExecutionMS, true)
-    if (task !== null) {
-      await this.adapter.deleteTask(uid)
-    }
-  }
-
-  #deleteTask (uid: string): void {
-    this
-      .#_deleteTask(uid)
-      .catch((err) => {
-        this.emit('error', err)
-      })
-  }
-
-  async destroy (): Promise<boolean> {
-    if (!this.isDestroyed) {
-      this.isDestroyed = true
-      this.nextTick !== null && clearTimeout(this.nextTick)
-      this.nextTick = null
-      // we need to release lock when destroy
-      await this.#releaseLock()
-      return true
-    }
-    return false
-  }
-
-  async #aquireLock (nextExecuteAt: number): Promise<boolean> {
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/try#using_promise.try
+const promiseTry = function (func: Function) {
+  return new Promise((resolve, reject) => {
     try {
-      this.isLocked = await this.adapter.aquireLock(this.application, nextExecuteAt)
-      return this.isLocked
+      resolve(func())
     } catch (err) {
-      this.emit('error', err)
+      reject(err)
+    }
+  })
+}
+
+export class CronJob extends JoSk {
+  async setCronJob (func: () => void | Promise<void>, cron: string, uid: string): Promise<string> {
+    const nextTimestamp = +parseExpression(cron).next().toDate()
+    const that = this
+    return await this.setInterval(function (ready) {
+      ready(parseExpression(cron).next().toDate())
+      // since we are cron
+      // we should not throw when there is error
+      promiseTry(func).catch((error) => {
+        if (typeof that.onError === 'function') {
+          that.onError('cronjob recieved error', {
+            description: 'cronjob recieved error',
+            error,
+            uid
+          })
+        }
+      })
+    }, nextTimestamp - Date.now(), uid)
+  }
+
+  async setLoopTask (func: () => void | Promise<void>, uid: string): Promise<string> {
+    const that = this
+    return await this.setImmediate(function () {
+      promiseTry(func)
+        .catch((error) => {
+          if (typeof that.onError === 'function') {
+            that.onError('loop task recieved error', {
+              description: 'loop task recieved error',
+              error: error as Error,
+              uid
+            })
+          }
+        })
+        .finally(() => {
+          that.setLoopTask(func, uid)
+        })
+    }, uid)
+  }
+}
+
+/**
+ * Extracted from https://github.com/veliovgroup/josk/commit/e81e51ddbdb8f119331534616988ea81174da027
+ * License as BSD 3-Clause "New" or "Revised" License https://github.com/veliovgroup/josk/blob/e81e51ddbdb8f119331534616988ea81174da027/LICENSE
+ * It is modified to provide more customization.
+  */
+
+interface MongoAdapterOptions extends JoSkMongoAdapterOptions {
+  collectionName?: string
+}
+
+const ensureIndex = async (collection: Collection, keys: any, opts: any) => {
+  try {
+    await collection.createIndex(keys, opts)
+  } catch (e: any) {
+    if (e.code === 85) {
+      let indexName
+      const indexes = await collection.indexes()
+      for (const index of indexes) {
+        let drop = true
+        for (const indexKey of Object.keys(keys)) {
+          if (typeof index.key[indexKey] === 'undefined') {
+            drop = false
+            break
+          }
+        }
+
+        for (const indexKey of Object.keys(index.key)) {
+          if (typeof keys[indexKey] === 'undefined') {
+            drop = false
+            break
+          }
+        }
+
+        if (drop) {
+          indexName = index.name
+          break
+        }
+      }
+
+      if (indexName) {
+        await collection.dropIndex(indexName)
+        await collection.createIndex(keys, opts)
+      }
+    } else {
+      console.info(`[INFO] [josk] [MongoAdapter] [ensureIndex] Can not set ${Object.keys(keys).join(' + ')} index on "${collection.collectionName}" collection`, { keys, opts, details: e })
+    }
+  }
+}
+
+const logError = (error: Error | unknown, ...args: unknown[]) => {
+  if (error) {
+    console.error('[josk] [MongoAdapter] [logError]:', error, ...args)
+  }
+}
+
+export class MongoAdapter {
+  name: string
+  prefix: string
+  collectionName: string
+  lockCollectionName: string
+  resetOnInit: boolean
+
+  uniqueName: string
+  db: Db
+  collection: Collection
+  lockCollection: Collection
+  joskInstance!: JoSk
+
+  constructor (opts: MongoAdapterOptions) {
+    this.name = 'mongo'
+    this.prefix = (typeof opts.prefix === 'string') ? opts.prefix : ''
+    this.collectionName = opts.collectionName ?? '__JobTasks__'
+    this.lockCollectionName = opts.lockCollectionName ?? `${this.collectionName}.lock`
+    this.resetOnInit = opts.resetOnInit ?? false
+
+    if (!opts.db) {
+      const err: any = Error('{db} option is required for MongoAdapter')
+      err.description = 'MongoDB database {db} option is required, e.g. returned from `MongoClient.connect` method'
+      throw err
+    }
+
+    this.db = opts.db
+    this.uniqueName = `${this.collectionName}${this.prefix}`
+    this.collection = opts.db.collection(this.uniqueName)
+    ensureIndex(this.collection, { uid: 1 }, { background: false, unique: true })
+    ensureIndex(this.collection, { uid: 1, isDeleted: 1 }, { background: false })
+    ensureIndex(this.collection, { executeAt: 1 }, { background: false })
+
+    this.lockCollection = opts.db.collection(this.lockCollectionName)
+    ensureIndex(this.lockCollection, { expireAt: 1 }, { background: false, expireAfterSeconds: 1 })
+    ensureIndex(this.lockCollection, { uniqueName: 1 }, { background: false, unique: true })
+
+    if (this.resetOnInit) {
+      this.collection.deleteMany({
+        isInterval: false
+      }).then(() => {}).catch(logError)
+
+      this.lockCollection.deleteMany({
+        uniqueName: this.uniqueName
+      }).then(() => {}).catch(logError)
+    }
+  }
+
+  /**
+   * @async
+   * @memberOf MongoAdapter
+   * @name ping
+   * @description Check connection to MongoDB
+   * @returns {Promise<object>}
+   */
+  async ping () {
+    if (!this.joskInstance) {
+      const reason = 'JoSk instance not yet assigned to {joskInstance} of Storage Adapter context'
+      return {
+        status: reason,
+        code: 503,
+        statusCode: 503,
+        error: new Error(reason),
+      }
+    }
+
+    try {
+      const ping = await this.db.command({ ping: 1 })
+      if (ping?.ok === 1) {
+        return {
+          status: 'OK',
+          code: 200,
+          statusCode: 200,
+        }
+      }
+    } catch (pingError) {
+      return {
+        status: 'Internal Server Error',
+        code: 500,
+        statusCode: 500,
+        error: pingError
+      }
+    }
+
+    return {
+      status: 'Service Unavailable',
+      code: 503,
+      statusCode: 503,
+      error: new Error('Service Unavailable')
+    }
+  }
+
+  async acquireLock () {
+    const expireAt = new Date(Date.now() + this.joskInstance.zombieTime)
+
+    try {
+      const record = await this.lockCollection.findOne({
+        uniqueName: this.uniqueName
+      }, {
+        projection: {
+          uniqueName: 1
+        }
+      })
+
+      if (record?.uniqueName === this.uniqueName) {
+        return false
+      }
+
+      const result = await this.lockCollection.insertOne({
+        uniqueName: this.uniqueName,
+        expireAt
+      })
+
+      if (result.insertedId) {
+        return true
+      }
+      return false
+    } catch (opError: any) {
+      if (opError?.code === 11000) {
+        return false
+      }
+
+      this.joskInstance.__errorHandler(opError, '[acquireLock] [opError]', 'Exception inside MongoAdapter#acquireLock() method')
       return false
     }
   }
 
-  async #releaseLock (): Promise<void> {
+  async releaseLock () {
+    await this.lockCollection.deleteOne({ uniqueName: this.uniqueName })
+  }
+
+  async remove (uid: string) {
     try {
-      if (!this.isLocked) return
-      await this.adapter.releaseLock(this.application)
-    } catch (err) {
-      this.emit('error', err)
-    }
-  }
-
-  async #_execute (task: Task): Promise<void> {
-    if (this.isDestroyed || task.isDeleted) return
-
-    const done = async (executeAt: number): Promise<void> => {
-      await this.adapter.updateTask(task.uid, executeAt, task.once)
-    }
-
-    const executor = this.#tasks[task.uid]
-    if (typeof executor !== 'function') {
-      // when we missing runtime
-      // we delay the task to maxExecutionMS
-      await done(Date.now() + this.maxExecutionMS)
-      this.emit('error', Error(`Task "${task.uid}" is missing runtime function.`))
-      return
-    }
-
-    // when it only run once, we remove task before execute
-    // it prevent another instance to pickup the task
-    if (task.once) await this.#_deleteTask(task.uid)
-    // execute
-    await executor()
-    const timestamp = Date.now()
-    const nextExecuteAt = timestamp + task.delay
-    // we emit executed event
-    this.emit('executed', {
-      uid: task.uid,
-      delay: task.delay,
-      timestamp,
-    })
-    // when it allows to run multiple times
-    // we update the executedAt information
-    if (!task.once) await done(nextExecuteAt)
-  }
-
-  #execute (task: Task): void {
-    this
-      .#_execute(task)
-      .catch((err) => {
-        this.emit('error', err)
+      const result = await this.collection.findOneAndUpdate({
+        uid,
+        isDeleted: false
+      }, {
+        $set: {
+          isDeleted: true
+        }
+      }, {
+        returnDocument: 'before',
+        projection: {
+          _id: 1,
+          isDeleted: 1
+        }
       })
-  }
 
-  async #_executeAll (): Promise<void> {
-    if (this.isDestroyed) return
-
-    const now = Date.now()
-    const nextExecuteAt = now + this.maxExecutionMS
-    const isLocked = await this.#aquireLock(nextExecuteAt)
-    if (!isLocked) {
-      this.#tick()
-      return
-    }
-
-    try {
-      const tasks = await this.adapter.fetchTasks(now)
-      // we hold all tasks by delay executeAt to the maxExecutionMS
-      await this.adapter.updateTasks(tasks.map((o) => o.uid), nextExecuteAt)
-      for (const task of tasks) {
-        this.#execute(task)
+      const res = result?._id ? result : result?.value // mongodb 5 vs. 6 compatibility
+      if (res?.isDeleted === false) {
+        const deleteResult = await this.collection.deleteOne({ _id: res._id })
+        return deleteResult?.deletedCount >= 1
       }
-    } catch (err) {
-      this.emit('error', err)
-    } finally {
-      await this.#releaseLock()
-      this.#tick()
+
+      return false
+    } catch (opError: any) {
+      this.joskInstance.__errorHandler(opError, '[remove] [opError]', 'Exception inside MongoAdapter#remove() method', uid)
+      return false
     }
   }
 
-  #executeAll (): void {
-    this
-      .#_executeAll()
-      .catch((err) => {
-        this.emit('error', err)
+  async add (uid: string, isInterval: boolean, delay: number) {
+    const next = Date.now() + delay
+
+    try {
+      const task = await this.collection.findOne({
+        uid
       })
+
+      if (!task) {
+        await this.collection.insertOne({
+          uid,
+          delay,
+          executeAt: new Date(next),
+          isInterval,
+          isDeleted: false
+        })
+
+        return true
+      }
+
+      if (task.isDeleted === false) {
+        let update: any = null
+        if (task.delay !== delay) {
+          update = { delay }
+        }
+
+        if (+task.executeAt !== next) {
+          if (!update) {
+            update = {}
+          }
+          update.executeAt = new Date(next)
+        }
+
+        if (update) {
+          await this.collection.updateOne({
+            uid
+          }, {
+            $set: update
+          })
+        }
+
+        return true
+      }
+
+      return false
+    } catch (opError: any) {
+      this.joskInstance.__errorHandler(opError, '[add] [opError]', 'Exception inside MongoAdapter#add()', uid)
+      return false
+    }
   }
 
-  #tick (): void {
-    this.nextTick = setTimeout(() => {
-      this.#executeAll()
-    }, Math.round((Math.random() * this.maxTickMS) + this.minTickMS))
+  async update (task: any, nextExecuteAt: Date) {
+    if (typeof task !== 'object' || typeof task.uid !== 'string') {
+      this.joskInstance.__errorHandler({ task }, '[MongoAdapter] [update] [task]', 'Task malformed or undefined')
+      return false
+    }
+
+    if (!(nextExecuteAt instanceof Date)) {
+      this.joskInstance.__errorHandler({ nextExecuteAt }, '[MongoAdapter] [update] [nextExecuteAt]', 'Next execution date is malformed or undefined', task.uid)
+      return false
+    }
+
+    try {
+      const updateResult = await this.collection.updateOne({
+        uid: task.uid
+      }, {
+        $set: {
+          executeAt: nextExecuteAt
+        }
+      })
+      return updateResult?.modifiedCount >= 1
+    } catch (opError) {
+      this.joskInstance.__errorHandler(opError, '[MongoAdapter] [update] [opError]', 'Exception inside RedisAdapter#update() method', task.uid)
+      return false
+    }
+  }
+
+  async iterate (nextExecuteAt: Date) {
+    const _ids = []
+    const tasks = []
+
+    const cursor = this.collection.find({
+      executeAt: {
+        $lte: new Date()
+      }
+    }, {
+      projection: {
+        _id: 1,
+        uid: 1,
+        delay: 1,
+        isDeleted: 1,
+        isInterval: 1
+      }
+    })
+
+    try {
+      let task: any
+      while (await cursor.hasNext()) {
+        task = await cursor.next()
+        _ids.push(task._id)
+        tasks.push(task)
+      }
+      await this.collection.updateMany({
+        _id: {
+          $in: _ids
+        }
+      }, {
+        $set: {
+          executeAt: nextExecuteAt
+        }
+      })
+    } catch (mongoError) {
+      logError('[iterate] mongoError:', mongoError)
+    }
+
+    for (const task of tasks) {
+      this.joskInstance.__execute(task)
+    }
+
+    await cursor.close()
   }
 }
+
+export { RedisAdapter }

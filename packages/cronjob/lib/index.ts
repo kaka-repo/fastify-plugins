@@ -1,42 +1,25 @@
 import { type FastifyPluginAsync } from 'fastify'
 import FastifyPlugin from 'fastify-plugin'
-import { type Adapter, type AdapterOptions } from './adapter/adapter'
-import { CronJob, type CronJobOptions } from './cronjob'
-import { FST_CJ_INVALID_OPTION } from './error'
-import { kAdapter } from './symbols'
+import { JoSkOptions } from 'josk'
+import { CronJob } from './cronjob'
 
 declare module 'fastify' {
   interface FastifyInstance {
-    cronjob: CronJob<FastifyInstance>
+    cronjob: CronJob
   }
 }
 
-export interface FastifyCronJobOption extends Omit<CronJobOptions, 'adapter'> {
-  adapter: typeof Adapter
-  adapterOption: AdapterOptions
+export interface FastifyCronJobOption extends JoSkOptions {
+
 }
 
 const plugin: FastifyPluginAsync<FastifyCronJobOption> = async function (fastify, option) {
-  // we check if adapter provide special symbol
-  if (option.adapter?.[kAdapter] !== true) {
-    throw FST_CJ_INVALID_OPTION('option.adapter', 'Adapter', option.adapter)
-  }
-
-  const { adapter: Adapter } = option
-  const adapter = new Adapter(option.adapterOption)
-
-  await adapter.prepare()
-
-  const cronjob = new CronJob<any>({
-    context: fastify,
-    ...option,
-    adapter,
-  })
+  const cronjob = new CronJob(option)
 
   fastify.decorate('cronjob', cronjob)
 
-  fastify.addHook('onClose', async function () {
-    await cronjob.destroy()
+  fastify.addHook('onClose', () => {
+    cronjob.destroy()
   })
 }
 
@@ -51,3 +34,5 @@ export const fastifyCronJob = FastifyPlugin(plugin, {
   dependencies: [],
   encapsulate: false,
 })
+
+export { MongoAdapter, RedisAdapter } from './cronjob'
