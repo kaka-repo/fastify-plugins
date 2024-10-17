@@ -3,7 +3,7 @@ import EventEmitter from 'events'
 import { type Adapter } from './adapter/adapter'
 
 type _TaskExecutor = () => Promise<void>
-export type TaskExecutor<Context = unknown> = (context: Context) => Promise<void>
+export type TaskExecutor<Context = unknown> = (context: Context) => void | Promise<void>
 
 export interface Task {
   uid: string
@@ -54,11 +54,13 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
     this.isDestroyed = false
     this.isLocked = false
     this.adapter = options.adapter
+    this.adapter.applicationName = this.application
     this.#context = options.context as any
 
     this.minTickMS = options?.minTickMS ?? 128
     this.maxTickMS = options?.maxTickMS ?? 768
     this.maxExecutionMS = options?.maxExecutionMS ?? 900_000
+    this.adapter.prepare()
     this.#tick()
   }
 
@@ -151,22 +153,20 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
   ): Promise<string> {
     const nextExecuteAt = Number(parseExpression(cron).next().toDate())
     const ms = nextExecuteAt - Date.now()
-    const _uid = `timeout-cron-${uid}`
-    if (fresh) this.#deleted[_uid] = false
-    if (this.#deleted[_uid]) return ''
+    !uid.startsWith('timeout-cron-') && (uid = `timeout-cron-${uid}`)
+    if (fresh) this.#deleted[uid] = false
+    if (this.#deleted[uid]) return ''
 
     return await this.setTimeout(async (context) => {
-      if (this.#deleted[_uid]) return
-      setImmediate(() => {
-        // we execute immediately for the next task
-        Promise.race([
-          executor(context),
-          this.#setCronJob(executor, cron, uid, false, context),
-        ]).catch((err) => {
-          this.emit('error', err)
-        })
-      })
-    }, ms, _uid, context)
+      if (this.#deleted[uid]) return
+      const [, result] = await Promise.allSettled([
+        this.#setCronJob(executor, cron, uid, false, context),
+        executor(context)
+      ])
+      if (result.status === 'rejected') {
+        this.emit('error', result.reason)
+      }
+    }, ms, uid, context)
   }
 
   async setLoopTask<Context = RootContext>(
@@ -183,17 +183,19 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
     fresh: boolean,
     context?: Context
   ): Promise<string> {
-    const _uid = `immediate-loop-${uid}`
-    if (fresh) this.#deleted[_uid] = false
-    if (this.#deleted[_uid]) return ''
+    !uid.startsWith('immediate-loop-') && (uid = `immediate-loop-${uid}`)
+    if (fresh) this.#deleted[uid] = false
+    if (this.#deleted[uid]) return ''
     return await this.setImmediate(async (context) => {
-      if (this.#deleted[_uid]) return
+      if (this.#deleted[uid]) return
       try {
         await executor(context)
+      } catch (err) {
+        this.emit('error', err)
       } finally {
         await this.#setLoopTask(executor, uid, false, context)
       }
-    }, _uid, context)
+    }, uid, context)
   }
 
   clearInterval (uid: string): void {

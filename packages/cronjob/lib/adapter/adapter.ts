@@ -2,13 +2,16 @@ import { type CreateTask, type Task } from '../cronjob'
 import { kAdapter } from '../symbols'
 
 export interface AdapterOptions {
+  resetOnInit?: boolean
 }
 
 export class Adapter {
   readonly #options: AdapterOptions
+  applicationName: string
 
   constructor (options: AdapterOptions) {
     this.#options = options
+    this.applicationName = ''
   }
 
   static [kAdapter]: any = true

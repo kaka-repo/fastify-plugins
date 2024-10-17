@@ -4,6 +4,7 @@ import { Adapter, type AdapterOptions } from './adapter'
 
 export interface MongoDBAdapterOptions extends AdapterOptions {
   db: Db
+  name?: string
 }
 
 async function ensureIndex (collection: Collection, indexSpec: IndexSpecification, options: CreateIndexesOptions): Promise<void> {
@@ -13,23 +14,34 @@ async function ensureIndex (collection: Collection, indexSpec: IndexSpecificatio
 }
 export class MongoDBAdapter extends Adapter {
   db: Db
+  name: string
   collection: Collection
   collectionLock: Collection
+  resetOnInit: boolean
 
   constructor (options: MongoDBAdapterOptions) {
     super(options)
     this.db = options.db
-    this.collection = this.db.collection('__cron__.task')
-    this.collectionLock = this.db.collection('__cron__.lock')
+    this.name = options.name ?? 'tasks'
+    this.collection = this.db.collection(`${this.name}.task`)
+    this.collectionLock = this.db.collection(`${this.name}.lock`)
+    this.resetOnInit = options.resetOnInit ?? false
   }
 
   async prepare (): Promise<void> {
-    await ensureIndex(this.collection, { uid: 1 }, { unique: true, background: false })
-    await ensureIndex(this.collection, { uid: 1, isDeleted: 1 }, { unique: false, background: false })
-    await ensureIndex(this.collection, { executeAt: 1 }, { unique: false, background: false })
+    // we use all settled for error-free control
+    await Promise.allSettled([
+      ensureIndex(this.collection, { uid: 1 }, { unique: true, background: false }),
+      ensureIndex(this.collection, { uid: 1, isDeleted: 1 }, { unique: false, background: false }),
+      ensureIndex(this.collection, { executeAt: 1 }, { unique: false, background: false }),
 
-    await ensureIndex(this.collectionLock, { expireAt: 1 }, { unique: false, expireAfterSeconds: 1, background: false })
-    await ensureIndex(this.collectionLock, { application: 1 }, { unique: true, background: false })
+      ensureIndex(this.collectionLock, { expireAt: 1 }, { unique: false, expireAfterSeconds: 1, background: false }),
+      ensureIndex(this.collectionLock, { application: 1 }, { unique: true, background: false })
+    ])
+    if (this.resetOnInit) {
+      this.collection.deleteMany({ once: false }).catch(() => {})
+      this.collectionLock.deleteMany({ application: this.applicationName }).catch(() => {})
+    }
   }
 
   async fetchTasks (executeAt: number): Promise<Task[]> {
@@ -42,32 +54,20 @@ export class MongoDBAdapter extends Adapter {
   }
 
   async createTask (task: CreateTask): Promise<void> {
-    const _task = await this.collection.findOne<Task>({ uid: task.uid })
     const executeAt = Date.now() + task.delay
-    if (_task === null) {
-      await this.collection.insertOne({
-        uid: task.uid,
-        once: task.once ?? false,
+    await this.collection.updateOne({
+      uid: task.uid
+    }, {
+      $set: {
         delay: task.delay,
         executeAt,
         isDeleted: false,
-      })
-    } else {
-      const $set: any = { isDeleted: false }
-      if (_task.delay !== task.delay) {
-        $set.delay = task.delay
+      },
+      $setOnInsert: {
+        uid: task.uid,
+        once: task.once ?? false,
       }
-      if (_task.executeAt !== executeAt) {
-        $set.executeAt = executeAt
-      }
-      if ($set !== null) {
-        await this.collection.updateOne({
-          uid: task.uid,
-        }, {
-          $set,
-        })
-      }
-    }
+    }, { upsert: true })
   }
 
   async updateTasks (uids: string[], executeAt: number): Promise<void> {
@@ -99,10 +99,17 @@ export class MongoDBAdapter extends Adapter {
   }
 
   async aquireLock (name: string, expireAt: number): Promise<boolean> {
-    const result = await this.collectionLock.findOne({ application: name })
-    if (result !== null) return false
-    await this.collectionLock.insertOne({ application: name, expireAt })
-    return true
+    const { acknowledged, upsertedId } = await this.collectionLock.updateOne({
+      application: name
+    }, {
+      $set: { application: name },
+      $setOnInsert: { expireAt }
+    }, {
+      upsert: true
+    })
+    // when upsertedId is non-null, it means the document is inserted
+    // when upsertedId is null, it means the document already exists
+    return acknowledged && upsertedId !== null
   }
 
   async releaseLock (name: string): Promise<void> {
