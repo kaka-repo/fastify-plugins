@@ -1,4 +1,4 @@
-import { parseExpression } from 'cron-parser'
+import Cron from 'cron-parser'
 import EventEmitter from 'events'
 import { type Adapter } from './adapter/adapter'
 
@@ -151,7 +151,7 @@ export class CronJob<RootContext = unknown> extends EventEmitter {
     fresh: boolean,
     context?: Context
   ): Promise<string> {
-    const nextExecuteAt = Number(parseExpression(cron).next().toDate())
+    const nextExecuteAt = Number(Cron.parseExpression(cron).next().toDate())
     const ms = nextExecuteAt - Date.now()
     !uid.startsWith('timeout-cron-') && (uid = `timeout-cron-${uid}`)
     if (fresh) this.#deleted[uid] = false
