@@ -1,4 +1,4 @@
-import { parseExpression } from 'cron-parser'
+import Cron from 'cron-parser'
 import Fastify, { FastifyInstance } from 'fastify'
 import { MongoClient } from 'mongodb'
 import { after, before, test, TestContext } from 'node:test'
@@ -194,10 +194,10 @@ test('cronjob', async function (t: TestContext) {
     const promise = createDeferredPromise()
     const uid = `timeout-cron-${name}`
     tasks[name] = [Date.now()]
-    expecteds[name] = [+parseExpression(name).next().toDate()]
+    expecteds[name] = [+Cron.parseExpression(name).next().toDate()]
     fastify.cronjob.setCronJob(() => {
       tasks[name].push(Date.now())
-      expecteds[name].push(+parseExpression(name).next().toDate())
+      expecteds[name].push(+Cron.parseExpression(name).next().toDate())
       if (tasks[name].length === 3) {
         promise.resolve()
         fastify.cronjob.clearTimeout(uid)
